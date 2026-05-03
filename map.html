@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CampusNav — Map</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .search-strip {
+    background: var(--navy-mid);
+    border-bottom: 1px solid var(--navy-border);
+    padding: 10px 16px;
+    flex-shrink: 0;
+  }
+  .map-wrap { flex: 1; position: relative; background: #08111c; overflow: hidden; }
+  .map-wrap svg { width: 100%; height: 100%; }
+
+  /* floating map controls */
+  .map-ctrl {
+    position: absolute;
+    right: 12px; top: 12px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .map-btn {
+    width: 36px; height: 36px;
+    background: var(--navy-mid);
+    border: 1px solid var(--navy-border);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    color: var(--white-dim);
+    font-size: 18px;
+    transition: background .15s, color .15s;
+    user-select: none;
+  }
+  .map-btn:hover { background: var(--navy-light); color: var(--white); }
+
+  /* layer legend */
+  .map-legend {
+    position: absolute;
+    left: 12px; bottom: 8px;
+    background: var(--navy-mid);
+    border: 1px solid var(--navy-border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    display: flex; flex-direction: column; gap: 5px;
+  }
+  .legend-row { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--white-dim); }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  /* destination card */
+  .dest-card {
+    background: var(--navy-mid);
+    border-top: 1px solid var(--navy-border);
+    padding: 14px 16px;
+    flex-shrink: 0;
+  }
+  .dest-nums {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .dest-num-box {
+    background: var(--navy-light);
+    border: 1px solid var(--navy-border);
+    border-radius: var(--radius-sm);
+    padding: 10px;
+    text-align: center;
+  }
+  .dest-num-val { font-size: 20px; font-weight: 600; font-family: var(--mono); color: var(--white); }
+  .dest-num-lbl { font-size: 10px; color: var(--white-faint); margin-top: 2px; }
+
+  .step-list { display: flex; flex-direction: column; gap: 0; margin-top: 10px; }
+  .step {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--navy-border);
+  }
+  .step:last-child { border-bottom: none; }
+  .step-num {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--accent-dim);
+    border: 1px solid var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600; color: var(--accent);
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .step.done .step-num { background: var(--green); border-color: var(--green); color: #052a14; }
+  .step.active .step-num { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  /* route animation */
+  @keyframes dash {
+    to { stroke-dashoffset: -60; }
+  }
+  .route-line { animation: dash 1.2s linear infinite; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <div class="topbar">
+    <a class="topbar-back" href="dashboard.html">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"/></svg>
+    </a>
+    <div>
+      <div class="topbar-title">Campus Map</div>
+      <div class="topbar-sub">Navigating to B4-312</div>
+    <button class="theme-toggle-btn" id="themeToggle" onclick="window.__themeToggle()" title="Toggle theme">🌙</button>
+  </div>
+">
+    <div class="search-bar">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg>
+      <input type="text" placeholder="Find room, lab, or office…" id="searchInput" value="B4-312 — Data Structures">
+    </div>
+  </div>
+
+  <div class="map-wrap" id="mapWrap">
+    <svg id="campusSvg" viewBox="0 0 380 300" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
+          <path d="M 30 0 L 0 0 0 30" fill="none" stroke="#111e2e" stroke-width="0.5"/>
+        </pattern>
+        <marker id="arrowBlue" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="#3b7cf4"/>
+        </marker>
+      </defs>
+
+      <!-- Background -->
+      <rect width="380" height="300" fill="#08111c"/>
+      <rect width="380" height="300" fill="url(#grid)"/>
+
+      <!-- Roads -->
+      <rect x="160" y="0"   width="22" height="300" rx="0" fill="#0e1f30"/>
+      <rect x="0"   y="128" width="380" height="20"  rx="0" fill="#0e1f30"/>
+      <path d="M0,128 L160,128" stroke="#152030" stroke-width="0.5" fill="none"/>
+      <text x="85"  y="140" text-anchor="middle" fill="#1e3a50" font-size="8" font-family="DM Sans,sans-serif" letter-spacing="3">MAIN AVE</text>
+      <text x="295" y="140" text-anchor="middle" fill="#1e3a50" font-size="8" font-family="DM Sans,sans-serif" letter-spacing="3">MAIN AVE</text>
+
+      <!-- Green areas -->
+      <ellipse cx="171" cy="138" rx="20" ry="14" fill="#0a2218"/>
+      <ellipse cx="171" cy="138" rx="11" ry="8"  fill="#0f3320"/>
+
+      <!-- Block A (left-top) -->
+      <rect x="12"  y="12"  width="136" height="108" rx="6" fill="#0d1e30" stroke="#1c3550" stroke-width="1"/>
+      <text x="80"  y="60"  text-anchor="middle" fill="#4a6a8a" font-size="10" font-family="DM Sans,sans-serif" font-weight="500">Block A</text>
+      <text x="80"  y="74"  text-anchor="middle" fill="#2a4a6a" font-size="8"  font-family="JetBrains Mono,monospace">A1 · A2 · A3</text>
+      <!-- rooms in A -->
+      <rect x="20"  y="20"  width="36" height="25" rx="3" fill="#0f2030" stroke="#1c3550" stroke-width="0.5"/>
+      <text x="38"  y="35"  text-anchor="middle" fill="#3a6080" font-size="7" font-family="JetBrains Mono,monospace">A1-101</text>
+      <rect x="62"  y="20"  width="36" height="25" rx="3" fill="#0f2030" stroke="#1c3550" stroke-width="0.5"/>
+      <text x="80"  y="35"  text-anchor="middle" fill="#3a6080" font-size="7" font-family="JetBrains Mono,monospace">A1-205</text>
+      <rect x="104" y="20"  width="36" height="25" rx="3" fill="#0f2030" stroke="#1c3550" stroke-width="0.5"/>
+      <text x="122" y="35"  text-anchor="middle" fill="#3a6080" font-size="7" font-family="JetBrains Mono,monospace">A2-307</text>
+
+      <!-- Block B (right-top) — DESTINATION highlighted -->
+      <rect x="194" y="12"  width="168" height="108" rx="6" fill="#0d1e38" stroke="#1e3a6e" stroke-width="1.5"/>
+      <rect x="194" y="12"  width="168" height="108" rx="6" fill="none"    stroke="#3b7cf4" stroke-width="1" opacity="0.3"/>
+      <text x="278" y="60"  text-anchor="middle" fill="#4a6aaa" font-size="10" font-family="DM Sans,sans-serif" font-weight="500">Block B</text>
+      <text x="278" y="74"  text-anchor="middle" fill="#2a4a8a" font-size="8"  font-family="JetBrains Mono,monospace">B1 · B2 · B4</text>
+      <!-- destination room -->
+      <rect x="202" y="18"  width="48" height="32" rx="3" fill="#1a3a6e" stroke="#3b7cf4" stroke-width="1.5"/>
+      <text x="226" y="33"  text-anchor="middle" fill="#7eb3ff" font-size="8"  font-family="JetBrains Mono,monospace" font-weight="600">B4-312</text>
+      <text x="226" y="43"  text-anchor="middle" fill="#4a7abf" font-size="7"  font-family="DM Sans,sans-serif">★ dest</text>
+      <rect x="258" y="18"  width="40" height="25" rx="3" fill="#0f2038" stroke="#1c3558" stroke-width="0.5"/>
+      <text x="278" y="33"  text-anchor="middle" fill="#3a6090" font-size="7" font-family="JetBrains Mono,monospace">B2-101</text>
+      <rect x="306" y="18"  width="46" height="25" rx="3" fill="#0f2038" stroke="#1c3558" stroke-width="0.5"/>
+      <text x="329" y="33"  text-anchor="middle" fill="#3a6090" font-size="7" font-family="JetBrains Mono,monospace">B4-201</text>
+
+      <!-- Block C (left-bottom) -->
+      <rect x="12"  y="158" width="136" height="128" rx="6" fill="#0d1e30" stroke="#1c3550" stroke-width="1"/>
+      <text x="80"  y="220" text-anchor="middle" fill="#4a6a8a" font-size="10" font-family="DM Sans,sans-serif" font-weight="500">Block C — Labs</text>
+      <text x="80"  y="234" text-anchor="middle" fill="#2a4a6a" font-size="8"  font-family="JetBrains Mono,monospace">C1 · C2 · C3</text>
+
+      <!-- Library (right-bottom) -->
+      <rect x="194" y="158" width="168" height="128" rx="6" fill="#0a1e1e" stroke="#0e3030" stroke-width="1"/>
+      <text x="278" y="218" text-anchor="middle" fill="#2a5a5a" font-size="10" font-family="DM Sans,sans-serif" font-weight="500">Library</text>
+      <text x="278" y="232" text-anchor="middle" fill="#1a4040" font-size="8"  font-family="JetBrains Mono,monospace">LB-01 · 3F</text>
+
+      <!-- Route: user (C block) → main road → Block B dest -->
+      <path d="M 80 220 L 80 148 L 171 148 L 171 128 L 195 60 L 202 34"
+        stroke="#3b7cf4" stroke-width="2.5" fill="none"
+        stroke-dasharray="10,5" stroke-linecap="round"
+        class="route-line" stroke-dashoffset="0"
+        marker-end="url(#arrowBlue)"/>
+
+      <!-- You marker -->
+      <circle cx="80" cy="224" r="9" fill="#0d3320" stroke="#22c97a" stroke-width="2"/>
+      <text x="80" y="228" text-anchor="middle" fill="#22c97a" font-size="7" font-weight="600">YOU</text>
+
+      <!-- Destination marker -->
+      <circle cx="226" cy="15" r="8" fill="#1a3a6e" stroke="#3b7cf4" stroke-width="2"/>
+      <text x="226" y="19" text-anchor="middle" fill="#7eb3ff" font-size="9" font-weight="700">★</text>
+
+    </svg>
+
+    <!-- Map controls -->
+    <div class="map-ctrl">
+      <div class="map-btn" onclick="zoomIn()">+</div>
+      <div class="map-btn" onclick="zoomOut()">−</div>
+      <div class="map-btn" title="My location">◎</div>
+    </div>
+
+    <!-- Legend -->
+    <div class="map-legend">
+      <div style="font-size:10px;font-weight:600;color:var(--white-faint);letter-spacing:.08em;margin-bottom:3px;">LEGEND</div>
+      <div class="legend-row"><div class="legend-dot" style="background:#22c97a;"></div>You</div>
+      <div class="legend-row"><div class="legend-dot" style="background:#3b7cf4;"></div>Destination</div>
+      <div class="legend-row"><div class="legend-dot" style="background:#3b7cf4;width:14px;height:2px;border-radius:1px;"></div>Route</div>
+    </div>
+  </div>
+
+  <!-- Destination info strip -->
+  <div class="dest-card">
+    <div class="row spread">
+      <div class="col">
+        <div class="t-primary">Block B4 · Room 312</div>
+        <div class="t-tiny">Data Structures — Dr. Ahmed</div>
+      </div>
+      <div class="badge badge-teal">Step-free ✓</div>
+    </div>
+    <div class="dest-nums">
+      <div class="dest-num-box">
+        <div class="dest-num-val t-accent">B4</div>
+        <div class="dest-num-lbl">Building</div>
+      </div>
+      <div class="dest-num-box">
+        <div class="dest-num-val" style="color:var(--teal);">3rd</div>
+        <div class="dest-num-lbl">Floor</div>
+      </div>
+      <div class="dest-num-box">
+        <div class="dest-num-val" style="color:var(--green);">7m</div>
+        <div class="dest-num-lbl">Walk</div>
+      </div>
+    </div>
+
+    <!-- Directions -->
+    <div style="margin-top:12px;">
+      <div class="card-label">Directions</div>
+      <div class="step-list">
+        <div class="step done">
+          <div class="step-num">✓</div>
+          <div class="col"><div class="t-primary" style="font-size:13px;">Exit C Block main door</div><div class="t-tiny">Head north on Main Ave</div></div>
+        </div>
+        <div class="step active">
+          <div class="step-num">2</div>
+          <div class="col"><div class="t-primary" style="font-size:13px;">Cross Main Avenue</div><div class="t-tiny">Use zebra crossing at the roundabout</div></div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="col"><div class="t-primary" style="font-size:13px;">Enter Block B, take elevator</div><div class="t-tiny">Go to Floor 3 → Room 312</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a class="nav-item" href="dashboard.html"><svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>Home</a>
+    <a class="nav-item active" href="map.html"><svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M12 1.586l-4 4v12.828l4-4V1.586zM3.707 3.293A1 1 0 002 4v10a1 1 0 00.293.707L6 18.414V5.586L3.707 3.293zM17.707 5.293L14 1.586v12.828l2.293 2.293A1 1 0 0018 16V6a1 1 0 00-.293-.707z"/></svg>Map</a>
+    <a class="nav-item" href="timetable.html"><svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"/></svg>Schedule</a>
+    <a class="nav-item" href="alerts.html"><svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-2.83-2h5.66A3 3 0 0110 18z"/></svg>Alerts</a>
+    <a class="nav-item" href="places.html"><svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"/></svg>Places</a>
+  </nav>
+
+</div>
+<script>
+  let scale = 1;
+  const svg = document.getElementById('campusSvg');
+  function zoomIn()  { scale = Math.min(scale + 0.2, 2.5); svg.style.transform = `scale(${scale})`; svg.style.transformOrigin = 'center'; }
+  function zoomOut() { scale = Math.max(scale - 0.2, 0.6); svg.style.transform = `scale(${scale})`; svg.style.transformOrigin = 'center'; }
+</script>
+<script src="theme.js"></script>
+</body>
+</html>

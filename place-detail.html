@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CampusNav — Place Detail</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .hero-banner { padding:28px 20px 20px; display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; flex-shrink:0; border-bottom:1px solid var(--navy-border); }
+  .hero-icon { width:64px; height:64px; border-radius:20px; display:flex; align-items:center; justify-content:center; font-size:28px; }
+  .hero-name { font-size:20px; font-weight:600; color:var(--white); }
+  .hero-code { font-family:var(--mono); font-size:12px; color:var(--white-faint); }
+
+  .info-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .info-box { background:var(--navy-light); border:1px solid var(--navy-border); border-radius:var(--radius-sm); padding:12px; }
+  .info-val { font-size:15px; font-weight:500; color:var(--white); }
+  .info-lbl { font-size:11px; color:var(--white-faint); margin-top:2px; }
+
+  .cap-ring { position:relative; width:70px; height:70px; margin:0 auto; }
+  .cap-ring svg { transform:rotate(-90deg); }
+  .cap-ring .ring-num { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:600; font-family:var(--mono); }
+
+  .amenity-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .amenity-item { display:flex; align-items:center; gap:8px; font-size:13px; color:var(--white-dim); }
+  .amenity-check { width:18px; height:18px; border-radius:4px; background:#0d3320; border:1px solid #22c97a; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <div class="topbar">
+    <a class="topbar-back" href="places.html"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"/></svg></a>
+    <div><div class="topbar-title" id="topTitle">Place Detail</div><div class="topbar-sub" id="topSub"></div></div>
+  </div>
+
+  <div id="detailContent" style="display:flex;flex-direction:column;flex:1;overflow:hidden;">
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--white-faint);">Loading…</div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a class="nav-item" href="dashboard.html"><svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>Home</a>
+    <a class="nav-item" href="map.html"><svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12 1.586l-4 4v12.828l4-4V1.586zM3.707 3.293A1 1 0 002 4v10a1 1 0 00.293.707L6 18.414V5.586L3.707 3.293zM17.707 5.293L14 1.586v12.828l2.293 2.293A1 1 0 0018 16V6a1 1 0 00-.293-.707z" clip-rule="evenodd"/></svg>Map</a>
+    <a class="nav-item" href="timetable.html"><svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/></svg>Timetable</a>
+    <a class="nav-item" href="alerts.html"><svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-2.83-2h5.66A3 3 0 0110 18z"/></svg>Alerts</a>
+    <a class="nav-item active" href="places.html"><svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg>Places</a>
+  </nav>
+</div>
+
+<script>
+const places = {
+  lb1:  { name:'Main Library', icon:'📚', bg:'#0d2218', code:'LB-01', block:'LB Block', floor:'Ground–3F', hours:'07:00–22:00', status:'open', capacity:65, tags:['Quiet zone','Wi-Fi','Printing','AC'], desc:'Main campus library with 3 floors, quiet study pods, group discussion rooms, and full access to digital resources via HEC Digital Library.' },
+  lb2:  { name:'Digital Library Lab', icon:'💻', bg:'#0d1e38', code:'LB-G02', block:'LB Block', floor:'Ground', hours:'08:00–20:00', status:'open', capacity:40, tags:['Computers','Wi-Fi','Printing'], desc:'40-seat computer lab inside the library for e-resources and research databases.' },
+  lab1: { name:'CS Lab 1', icon:'🖥️', bg:'#1a0d1e', code:'C1-Lab1', block:'Block C', floor:'1st Floor', hours:'08:00–18:00', status:'open', capacity:30, tags:['Linux','Windows','AC'], desc:'General purpose CS lab with 40 high-spec workstations running Linux and Windows.' },
+  lab2: { name:'CS Lab 2', icon:'🖥️', bg:'#1a0d1e', code:'C1-Lab2', block:'Block C', floor:'1st Floor', hours:'08:00–18:00', status:'busy', capacity:88, tags:['Linux','Windows'], desc:'CS Lab 2 — currently in use for a scheduled lab session. Check again in 50 min.' },
+  lab3: { name:'HCI Lab', icon:'🎨', bg:'#0a1e1a', code:'C2-Lab3', block:'Block C', floor:'2nd Floor', hours:'08:00–17:00', status:'open', capacity:20, tags:['Design','Tablets','Eye-tracking'], desc:'Dedicated HCI & UX lab with prototyping tools, drawing tablets, and eye-tracking equipment.' },
+  lab4: { name:'Electronics Lab', icon:'⚡', bg:'#1a1a0d', code:'B3-Lab1', block:'Block B', floor:'3rd Floor', hours:'09:00–17:00', status:'open', capacity:50, tags:['Oscilloscopes','PCB'], desc:'Electronics and digital circuits lab with oscilloscopes, function generators, and PCB tools.' },
+  lab5: { name:'Network Lab', icon:'🌐', bg:'#0d1e38', code:'C3-Lab2', block:'Block C', floor:'3rd Floor', hours:'09:00–17:00', status:'closed', capacity:0, tags:['Cisco','Servers'], desc:'Cisco-certified networking lab. Closed today for hardware maintenance.' },
+  rm1:  { name:'Lecture Hall B4-312', icon:'🏫', bg:'#0d1e38', code:'B4-312', block:'Block B', floor:'3rd Floor', hours:'08:00–18:00', status:'busy', capacity:95, tags:['Projector','AC','60 seats'], desc:'Main lecture hall for CS-203 Data Structures. Currently in session.' },
+  rm2:  { name:'Seminar Room A2-307', icon:'🏫', bg:'#0d2218', code:'A2-307', block:'Block A', floor:'3rd Floor', hours:'08:00–18:00', status:'open', capacity:30, tags:['Projector','Whiteboard'], desc:'Small seminar room, good for group discussions and presentations.' },
+  rm3:  { name:'Auditorium', icon:'🎭', bg:'#1a1a1a', code:'AU-01', block:'Admin Block', floor:'Ground', hours:'09:00–20:00', status:'open', capacity:15, tags:['300 seats','Stage','AV system'], desc:'Main campus auditorium for events, seminars, and convocations. 300-seat capacity.' },
+  cn1:  { name:'Main Canteen', icon:'🍽️', bg:'#1a1200', code:'CN-01', block:'Ground Floor', floor:'Near Gate A', hours:'07:30–21:00', status:'open', capacity:60, tags:['Hot meals','Snacks','Seating'], desc:'Main campus canteen serving breakfast, lunch, and dinner. Menu changes daily.' },
+  cn2:  { name:'Juice & Snacks Corner', icon:'🧃', bg:'#0d1a0a', code:'CN-02', block:'Block B', floor:'Ground Floor', hours:'08:00–20:00', status:'open', capacity:80, tags:['Juice','Sandwiches','Cold drinks'], desc:'Quick snack bar near Block B entrance — popular during break times.' },
+  cn3:  { name:'Faculty Cafeteria', icon:'☕', bg:'#1a0d00', code:'CN-03', block:'Admin Block', floor:'1st Floor', hours:'09:00–17:00', status:'open', capacity:45, tags:['Coffee','Lunch','Faculty only'], desc:'Faculty cafeteria. Students may access during off-peak hours (after 3pm).' },
+  bcr1: { name:'Boys Common Room (BCR)', icon:'🛋️', bg:'#0d1e38', code:'BCR-01', block:'Block C', floor:'Ground Floor', hours:'07:00–22:00', status:'open', capacity:55, tags:['Seating','TV','AC','Charging'], desc:'Main relaxation area for male students. Features a TV lounge, comfortable seating, and USB charging ports.' },
+  gcr1: { name:'Girls Common Room (GCR)', icon:'🛋️', bg:'#1a0d1e', code:'GCR-01', block:'Block A', floor:'Ground Floor', hours:'07:00–22:00', status:'open', capacity:40, tags:['Seating','AC','Prayer area','Charging'], desc:'Dedicated relaxation and prayer area for female students. Fully AC with secure access.' },
+  st1:  { name:'Student Society Room', icon:'🎯', bg:'#0d1a1a', code:'SS-01', block:'Block A', floor:'1st Floor', hours:'10:00–18:00', status:'open', capacity:35, tags:['Events','Meetings','Projector'], desc:'Home of SOFTEC, ACM, and PROCOM student societies.' },
+  adm1: { name:'Admin Office', icon:'🏢', bg:'#1a1a1a', code:'AD-G01', block:'Admin Block', floor:'Ground Floor', hours:'09:00–17:00', status:'open', capacity:90, tags:['Fee','Documents','Registrar'], desc:'Main admin office for fee payments, document requests, and student registrations.' },
+  adm2: { name:'IT Support Desk', icon:'🛠️', bg:'#0d1e38', code:'IT-G02', block:'Admin Block', floor:'Ground Floor', hours:'09:00–17:00', status:'open', capacity:100, tags:['Wi-Fi help','Portal issues','Hardware'], desc:'IT helpdesk for portal issues, Wi-Fi access, and hardware support.' },
+  adm3: { name:'Medical / First Aid', icon:'🏥', bg:'#1a0d0d', code:'HC-01', block:'Admin Block', floor:'Ground Floor', hours:'08:00–18:00', status:'open', capacity:100, tags:['First aid','Nurse on duty','Medicines'], desc:'On-campus medical room with a nurse available during working hours.' },
+  adm4: { name:'Prayer Hall (Masjid)', icon:'🕌', bg:'#0a1e12', code:'MS-01', block:'Near Gate B', floor:'Ground', hours:'05:00–22:00', status:'open', capacity:10, tags:['Wudu area','Separate sections','AC'], desc:'Campus mosque open for all five daily prayers.' },
+};
+
+function capColor(p) { return p > 80 ? '#f04848' : p > 50 ? '#f5a623' : '#22c97a'; }
+function statusBadge(s) {
+  if (s==='open')   return '<div class="badge badge-green">● Open now</div>';
+  if (s==='busy')   return '<div class="badge badge-amber">◑ Busy</div>';
+  return '<div class="badge badge-red">○ Closed</div>';
+}
+
+function circumference(r) { return 2 * Math.PI * r; }
+
+const params = new URLSearchParams(window.location.search);
+const id = params.get('id') || 'lb1';
+const p = places[id] || places['lb1'];
+
+document.getElementById('topTitle').textContent = p.name;
+document.getElementById('topSub').textContent = p.code + ' · ' + p.block;
+
+const c = circumference(28);
+const fill = p.status === 'closed' ? 0 : (p.capacity / 100) * c;
+
+document.getElementById('detailContent').innerHTML = `
+  <div class="hero-banner" style="background:${p.bg}33;">
+    <div class="hero-icon" style="background:${p.bg};">${p.icon}</div>
+    <div class="hero-name">${p.name}</div>
+    <div class="hero-code">${p.code}</div>
+    <div style="display:flex;gap:8px;align-items:center;margin-top:4px;">
+      ${statusBadge(p.status)}
+      <div class="badge badge-gray">⏱ ${p.hours}</div>
+    <button class="theme-toggle-btn" id="themeToggle" onclick="window.__themeToggle()" title="Toggle theme">🌙</button>
+  </div>
+">
+    <div class="t-sec" style="font-size:13px;line-height:1.6;">${p.desc}</div>
+
+    <div class="info-grid">
+      <div class="info-box"><div class="info-val">${p.block}</div><div class="info-lbl">Building</div></div>
+      <div class="info-box"><div class="info-val">${p.floor}</div><div class="info-lbl">Floor</div></div>
+      <div class="info-box"><div class="info-val t-mono" style="font-size:14px;">${p.code}</div><div class="info-lbl">Room code</div></div>
+      <div class="info-box"><div class="info-val">${p.hours}</div><div class="info-lbl">Hours today</div></div>
+    </div>
+
+    ${p.status !== 'closed' ? `
+    <div class="card" style="text-align:center;">
+      <div class="card-label" style="text-align:left;">Live occupancy</div>
+      <div class="cap-ring">
+        <svg width="70" height="70" viewBox="0 0 70 70">
+          <circle cx="35" cy="35" r="28" fill="none" stroke="#1c2d44" stroke-width="7"/>
+          <circle cx="35" cy="35" r="28" fill="none" stroke="${capColor(p.capacity)}" stroke-width="7"
+            stroke-dasharray="${c}" stroke-dashoffset="${c - fill}" stroke-linecap="round"/>
+        </svg>
+        <div class="ring-num" style="color:${capColor(p.capacity)};">${p.capacity}%</div>
+      </div>
+      <div class="t-tiny" style="margin-top:6px;">${p.capacity > 80 ? 'Very crowded — consider another time' : p.capacity > 50 ? 'Moderately busy' : 'Plenty of space available'}</div>
+    </div>` : ''}
+
+    <div class="card">
+      <div class="card-label">Amenities & features</div>
+      <div class="amenity-grid">
+        ${p.tags.map(t => `
+        <div class="amenity-item">
+          <div class="amenity-check"><svg viewBox="0 0 12 12" fill="none" stroke="#22c97a" stroke-width="2" style="width:10px;height:10px;"><path d="M2 6l3 3 5-5"/></svg></div>
+          ${t}
+        </div>`).join('')}
+      </div>
+    </div>
+
+    <a href="map.html" class="btn btn-primary" style="text-decoration:none;">
+      <svg viewBox="0 0 20 20" fill="currentColor" style="width:16px;height:16px;"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg>
+      Navigate to ${p.code}
+    </a>
+
+    <a href="help.html" class="btn btn-ghost" style="text-decoration:none;">Report an issue with this room</a>
+  </div>
+`;
+</script>
+<script src="theme.js"></script>
+</body>
+</html>

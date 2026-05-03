@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CampusNav — Login</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .hero {
+    background: var(--navy-mid);
+    border-bottom: 1px solid var(--navy-border);
+    padding: 40px 20px 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  .logo-ring {
+    width: 64px; height: 64px;
+    border-radius: 20px;
+    background: var(--navy-light);
+    border: 1.5px solid var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 4px;
+  }
+  .logo-ring svg { width: 30px; height: 30px; color: var(--accent); }
+  .hero-title { font-size: 22px; font-weight: 600; color: var(--white); }
+  .hero-sub   { font-size: 12px; color: var(--white-dim); font-family: var(--mono); letter-spacing: 0.04em; }
+
+  .error-banner {
+    background: #3a0d0d;
+    border: 1px solid #7f1d1d;
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #f87171;
+    display: none;
+    align-items: center;
+    gap: 8px;
+  }
+  .error-banner.show { display: flex; }
+
+  .forgot { font-size: 12px; color: var(--accent); cursor: pointer; margin-left: auto; }
+  .forgot:hover { text-decoration: underline; }
+
+  .remember { margin-top: 2px; }
+
+  .divider-text {
+    text-align: center;
+    position: relative;
+    font-size: 12px;
+    color: var(--white-faint);
+  }
+  .divider-text::before, .divider-text::after {
+    content: ''; position: absolute; top: 50%;
+    width: 38%; height: 1px; background: var(--navy-border);
+  }
+  .divider-text::before { left: 0; }
+  .divider-text::after  { right: 0; }
+
+  .footer-note {
+    text-align: center;
+    font-size: 12px;
+    color: var(--white-faint);
+    padding-bottom: 8px;
+  }
+  .footer-note a { color: var(--accent); }
+
+  @keyframes shake {
+    0%,100%{ transform:translateX(0); }
+    20%    { transform:translateX(-6px); }
+    40%    { transform:translateX(6px); }
+    60%    { transform:translateX(-4px); }
+    80%    { transform:translateX(4px); }
+  }
+  .shake { animation: shake .4s ease; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <div class="hero" style="position:relative;">
+    <div style="position:absolute;top:14px;right:16px;"><button class="theme-toggle-btn" id="themeToggle" onclick="window.__themeToggle()" title="Toggle theme">🌙</button></div>
+    <div class="logo-ring">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+        <path d="M2 17l10 5 10-5"/>
+        <path d="M2 12l10 5 10-5"/>
+      </svg>
+    </div>
+    <div class="hero-title">CampusNav</div>
+    <div class="hero-sub">FAST NUCES · Student Portal</div>
+  </div>
+
+  <div class="page-body">
+
+    <div class="error-banner" id="errorBanner">
+      <svg viewBox="0 0 20 20" fill="currentColor" style="width:16px;height:16px;flex-shrink:0">
+        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+      </svg>
+      Invalid roll number or password. Please try again.
+    </div>
+
+    <div class="card" style="gap:14px;display:flex;flex-direction:column;">
+      <div style="font-size:17px;font-weight:600;color:var(--white);">Sign in</div>
+
+      <div class="field">
+        <label>Roll Number</label>
+        <input class="input" type="text" id="rollInput" placeholder="e.g. 23K-0737" autocomplete="username">
+      </div>
+
+      <div class="field">
+        <label>Password</label>
+        <div style="position:relative;">
+          <input class="input" type="password" id="passInput" placeholder="Enter your password" autocomplete="current-password" style="padding-right:42px;">
+          <button onclick="togglePass()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--white-faint);padding:0;display:flex;">
+            <svg id="eyeIcon" viewBox="0 0 20 20" fill="currentColor" style="width:16px;height:16px;">
+              <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+              <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="row spread remember">
+        <div class="check-row" onclick="toggleCheck()">
+          <div class="check-box" id="checkBox">
+            <svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2" id="checkMark" style="width:10px;height:10px;display:none;">
+              <path d="M2 6l3 3 5-5"/>
+            </svg>
+          </div>
+          <span class="t-sec">Remember me</span>
+        </div>
+        <span class="forgot">Forgot password?</span>
+      </div>
+
+      <button class="btn btn-primary" onclick="doLogin()" id="loginBtn">
+        Sign in
+        <svg viewBox="0 0 20 20" fill="currentColor" style="width:16px;height:16px;">
+          <path fill-rule="evenodd" d="M3 10a1 1 0 011-1h8.586l-2.293-2.293a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="divider-text">or</div>
+
+    <button class="btn btn-ghost" onclick="window.location.href='dashboard.html'">
+      Continue as Guest
+    </button>
+
+    <div class="footer-note">
+      Need help? <a href="help.html">Contact IT Support</a>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  let checked = false;
+
+  function toggleCheck() {
+    checked = !checked;
+    const box  = document.getElementById('checkBox');
+    const mark = document.getElementById('checkMark');
+    box.classList.toggle('checked', checked);
+    mark.style.display = checked ? 'block' : 'none';
+  }
+
+  function togglePass() {
+    const input = document.getElementById('passInput');
+    input.type = input.type === 'password' ? 'text' : 'password';
+  }
+
+  function doLogin() {
+    const roll = document.getElementById('rollInput').value.trim();
+    const pass = document.getElementById('passInput').value.trim();
+    const btn  = document.getElementById('loginBtn');
+    const err  = document.getElementById('errorBanner');
+
+    if (!roll || !pass) {
+      showError(); return;
+    }
+
+    // Demo: accept any non-empty credentials
+    btn.textContent = 'Signing in…';
+    btn.disabled = true;
+    setTimeout(() => {
+      window.location.href = 'dashboard.html';
+    }, 900);
+  }
+
+  function showError() {
+    const err  = document.getElementById('errorBanner');
+    const card = document.querySelector('.card');
+    err.classList.add('show');
+    card.classList.add('shake');
+    card.addEventListener('animationend', () => card.classList.remove('shake'), { once: true });
+  }
+
+  document.getElementById('passInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doLogin();
+  });
+</script>
+<script src="theme.js"></script>
+</body>
+</html>

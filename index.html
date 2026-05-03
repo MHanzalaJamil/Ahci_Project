@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CampusNav — Prototype Flow</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .proto-body { padding:28px 24px; }
+  .section-title { font-size:13px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--white-faint); border-bottom:1px solid var(--navy-border); padding-bottom:8px; margin-bottom:20px; }
+
+  /* Flow diagram */
+  .flow-wrap { overflow-x:auto; padding-bottom:12px; }
+  .flow { display:flex; align-items:flex-start; gap:0; min-width:700px; }
+  .flow-node { display:flex; flex-direction:column; align-items:center; gap:6px; }
+  .flow-box {
+    width:90px; padding:10px 8px;
+    background:var(--navy-mid); border:1.5px solid var(--navy-border); border-radius:var(--radius-sm);
+    font-size:11px; font-weight:500; color:var(--white); text-align:center;
+    cursor:pointer; text-decoration:none; transition:border-color .2s, background .2s;
+    display:flex; flex-direction:column; align-items:center; gap:5px;
+  }
+  .flow-box:hover { border-color:var(--accent); background:var(--accent-dim); text-decoration:none; }
+  .flow-box.start { border-color:var(--accent); background:var(--accent-dim); }
+  .flow-box .flow-icon { font-size:18px; }
+  .flow-arrow { display:flex; align-items:center; padding:0 4px; padding-top:28px; color:var(--white-faint); font-size:18px; }
+  .flow-label { font-size:9px; color:var(--white-faint); text-align:center; max-width:90px; line-height:1.4; }
+
+  /* Branch arrows */
+  .flow-branch { display:flex; flex-direction:column; gap:8px; }
+  .branch-item { display:flex; align-items:center; gap:4px; }
+  .branch-line { width:20px; height:1px; background:var(--navy-border); }
+
+  /* Task list */
+  .task-table { width:100%; border-collapse:collapse; font-size:12px; }
+  .task-table th { text-align:left; padding:8px 12px; font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:var(--white-faint); border-bottom:1px solid var(--navy-border); }
+  .task-table td { padding:10px 12px; border-bottom:1px solid var(--navy-border); color:var(--white-dim); vertical-align:top; }
+  .task-table td:first-child { color:var(--white); font-weight:500; }
+  .task-table tr:last-child td { border-bottom:none; }
+  .task-num { display:inline-flex; width:20px; height:20px; border-radius:50%; background:var(--accent-dim); border:1px solid var(--accent); align-items:center; justify-content:center; font-size:10px; font-weight:600; color:var(--accent); margin-right:6px; flex-shrink:0; }
+
+  .screen-link { display:flex; flex-direction:column; gap:6px; }
+  .screen-link a { display:flex; align-items:center; gap:10px; padding:12px 14px; background:var(--navy-mid); border:1px solid var(--navy-border); border-radius:var(--radius-sm); text-decoration:none; color:var(--white); font-size:13px; font-weight:500; transition:border-color .2s, background .2s; }
+  .screen-link a:hover { border-color:var(--accent); background:var(--accent-dim); }
+  .screen-link .s-icon { font-size:18px; }
+  .screen-link .s-arrow { margin-left:auto; color:var(--accent); }
+</style>
+</head>
+<body>
+<div class="app-shell" style="max-width:600px;">
+  <div class="topbar" style="justify-content:space-between;">
+    <div><div class="topbar-title">Interactive Prototype</div><div class="topbar-sub">Clickable flow — all 9 screens</div></div>
+    <button class="theme-toggle-btn" id="themeToggle" onclick="window.__themeToggle()" title="Toggle theme">🌙</button>
+  </div>
+
+  <div class="page-body proto-body">
+
+    <div class="section-title">Navigation Flow</div>
+    <div class="flow-wrap">
+      <div class="flow">
+        <div class="flow-node">
+          <a class="flow-box start" href="login.html"><div class="flow-icon">🔐</div>Login</a>
+          <div class="flow-label">Enter roll no. + password</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node">
+          <a class="flow-box" href="dashboard.html"><div class="flow-icon">🏠</div>Dashboard</a>
+          <div class="flow-label">Classes, tiles, stats</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-branch">
+          <div class="branch-item"><div class="branch-line"></div><a class="flow-box" href="map.html"><div class="flow-icon">🗺️</div>Map</a></div>
+          <div class="branch-item"><div class="branch-line"></div><a class="flow-box" href="timetable.html"><div class="flow-icon">📅</div>Timetable</a></div>
+          <div class="branch-item"><div class="branch-line"></div><a class="flow-box" href="alerts.html"><div class="flow-icon">🔔</div>Alerts</a></div>
+          <div class="branch-item"><div class="branch-line"></div><a class="flow-box" href="places.html"><div class="flow-icon">🏛️</div>Places</a></div>
+          <div class="branch-item"><div class="branch-line"></div><a class="flow-box" href="help.html"><div class="flow-icon">🛎️</div>Help</a></div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node">
+          <a class="flow-box" href="place-detail.html"><div class="flow-icon">📍</div>Detail</a>
+          <div class="flow-label">Place detail from Places hub</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-top:24px;">All Screens — Click to Open</div>
+    <div class="screen-link">
+      <a href="login.html"><div class="s-icon">🔐</div><div><div>Login</div><div style="font-size:11px;color:var(--white-faint);">Roll number · Password · Guest access</div></div><div class="s-arrow">→</div></a>
+      <a href="dashboard.html"><div class="s-icon">🏠</div><div><div>Dashboard</div><div style="font-size:11px;color:var(--white-faint);">Classes · Live now strip · Quick tiles · Stats</div></div><div class="s-arrow">→</div></a>
+      <a href="map.html"><div class="s-icon">🗺️</div><div><div>Campus Map</div><div style="font-size:11px;color:var(--white-faint);">SVG map · Route · Building / Floor / Room · Directions</div></div><div class="s-arrow">→</div></a>
+      <a href="timetable.html"><div class="s-icon">📅</div><div><div>Timetable</div><div style="font-size:11px;color:var(--white-faint);">Mon–Sat day tabs · Class cards · Navigate links</div></div><div class="s-arrow">→</div></a>
+      <a href="alerts.html"><div class="s-icon">🔔</div><div><div>Alerts</div><div style="font-size:11px;color:var(--white-faint);">Urgent / Notice / Info · Dismiss · Clear all</div></div><div class="s-arrow">→</div></a>
+      <a href="places.html"><div class="s-icon">🏛️</div><div><div>Places Hub</div><div style="font-size:11px;color:var(--white-faint);">Library · Labs · BCR · GCR · Canteen · Admin · Prayer</div></div><div class="s-arrow">→</div></a>
+      <a href="place-detail.html"><div class="s-icon">📍</div><div><div>Place Detail</div><div style="font-size:11px;color:var(--white-faint);">Occupancy ring · Amenities · Hours · Navigate CTA</div></div><div class="s-arrow">→</div></a>
+      <a href="help.html"><div class="s-icon">🛎️</div><div><div>Help & Support</div><div style="font-size:11px;color:var(--white-faint);">Report form · Contacts · Accordion FAQ</div></div><div class="s-arrow">→</div></a>
+      <a href="wireframes.html"><div class="s-icon">📐</div><div><div>Wireframes</div><div style="font-size:11px;color:var(--white-faint);">Low-fidelity sketches · Design decisions</div></div><div class="s-arrow">→</div></a>
+      <a href="hifi-guide.html"><div class="s-icon">🎨</div><div><div>HiFi Design Guide</div><div style="font-size:11px;color:var(--white-faint);">Colours · Type · Spacing · Figma checklist</div></div><div class="s-arrow">→</div></a>
+    </div>
+
+    <div class="section-title" style="margin-top:24px;">Prototype Tasks for Evaluation</div>
+    <div class="card" style="padding:0;overflow:hidden;">
+      <table class="task-table">
+        <thead><tr><th>#</th><th>Task</th><th>Expected Flow</th></tr></thead>
+        <tbody>
+          <tr><td><span class="task-num">1</span></td><td>Log in with your roll number</td><td>login → dashboard</td></tr>
+          <tr><td><span class="task-num">2</span></td><td>Find where your next class is</td><td>dashboard → timetable or dashboard class row</td></tr>
+          <tr><td><span class="task-num">3</span></td><td>Navigate to Room B4-312</td><td>map → search → route view</td></tr>
+          <tr><td><span class="task-num">4</span></td><td>Check if CS Lab 1 is free right now</td><td>places → filter Labs → CS Lab 1 → detail</td></tr>
+          <tr><td><span class="task-num">5</span></td><td>Dismiss the urgent alert about OOP Lab</td><td>alerts → tap urgent card</td></tr>
+          <tr><td><span class="task-num">6</span></td><td>Find the Boys Common Room (BCR)</td><td>places → filter Common → BCR-01</td></tr>
+          <tr><td><span class="task-num">7</span></td><td>Report a wrong room number on the map</td><td>help → issue type → description → submit</td></tr>
+          <tr><td><span class="task-num">8</span></td><td>Switch the app to light theme</td><td>any page → toggle button (top-right)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="t-tiny" style="text-align:center;margin-top:8px;">CampusNav v1.0 · FAST NUCES AHCI Project · Spring 2026</div>
+  </div>
+</div>
+<script src="theme.js"></script>
+</body>
+</html>

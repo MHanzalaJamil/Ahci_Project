@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CampusNav — Timetable</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .day-tabs { display:flex; overflow-x:auto; gap:6px; padding:12px 16px; background:var(--navy-mid); border-bottom:1px solid var(--navy-border); scrollbar-width:none; flex-shrink:0; }
+  .day-tabs::-webkit-scrollbar { display:none; }
+  .day-tab { flex-shrink:0; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:500; cursor:pointer; border:1px solid var(--navy-border); color:var(--white-dim); background:var(--navy-light); transition:all .2s; }
+  .day-tab.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+  .day-tab.today { border-color:var(--accent); color:var(--accent); }
+  .day-tab:hover:not(.active) { border-color:var(--accent); }
+
+  .time-col { width:44px; flex-shrink:0; font-family:var(--mono); font-size:11px; color:var(--white-faint); text-align:right; padding-top:2px; }
+  .slot { display:flex; gap:12px; margin-bottom:10px; }
+  .slot-card { flex:1; border-radius:var(--radius-sm); padding:12px; border-left:3px solid; }
+  .slot-card.cs   { background:#0d1e38; border-color:#3b7cf4; }
+  .slot-card.mt   { background:#1a1a0d; border-color:#f5a623; }
+  .slot-card.hci  { background:#0d1e1e; border-color:#0ea5a0; }
+  .slot-card.lab  { background:#1a0d1e; border-color:#a855f7; }
+  .slot-card.free { background:var(--navy-light); border-color:var(--navy-border); }
+  .slot-name { font-size:13px; font-weight:500; color:var(--white); }
+  .slot-meta { font-size:11px; color:var(--white-dim); margin-top:3px; }
+  .slot-room { font-family:var(--mono); font-size:10px; color:var(--white-faint); margin-top:4px; }
+
+  .week-summary { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+  .sum-box { background:var(--navy-light); border:1px solid var(--navy-border); border-radius:var(--radius-sm); padding:12px; text-align:center; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <div class="topbar" style="justify-content:space-between;">
+    <div><div class="topbar-title">My Timetable</div><div class="topbar-sub">Spring 2026 — Semester 5</div></div>
+    <button class="theme-toggle-btn" id="themeToggle" onclick="window.__themeToggle()" title="Toggle theme">🌙</button>
+      <div class="avatar">AK</div>
+  </div>
+
+  <div class="day-tabs" id="dayTabs">
+    <div class="day-tab" onclick="switchDay(this,'mon')">Mon</div>
+    <div class="day-tab today active" onclick="switchDay(this,'tue')">Tue <span style="font-size:9px;opacity:.7;">today</span></div>
+    <div class="day-tab" onclick="switchDay(this,'wed')">Wed</div>
+    <div class="day-tab" onclick="switchDay(this,'thu')">Thu</div>
+    <div class="day-tab" onclick="switchDay(this,'fri')">Fri</div>
+    <div class="day-tab" onclick="switchDay(this,'sat')">Sat</div>
+  </div>
+
+  <div class="page-body" id="scheduleBody">
+    <!-- injected by JS -->
+  </div>
+
+  <nav class="bottom-nav">
+    <a class="nav-item" href="dashboard.html"><svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>Home</a>
+    <a class="nav-item" href="map.html"><svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12 1.586l-4 4v12.828l4-4V1.586zM3.707 3.293A1 1 0 002 4v10a1 1 0 00.293.707L6 18.414V5.586L3.707 3.293zM17.707 5.293L14 1.586v12.828l2.293 2.293A1 1 0 0018 16V6a1 1 0 00-.293-.707z" clip-rule="evenodd"/></svg>Map</a>
+    <a class="nav-item active" href="timetable.html"><svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/></svg>Timetable</a>
+    <a class="nav-item" href="alerts.html"><svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-2.83-2h5.66A3 3 0 0110 18z"/></svg>Alerts</a>
+    <a class="nav-item" href="places.html"><svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg>Places</a>
+  </nav>
+</div>
+<script>
+const schedule = {
+  mon:[
+    {time:'08:00',end:'09:50',name:'Digital Logic Design',code:'EE-201',room:'B3-210',teacher:'Dr. Raza',type:'cs'},
+    {time:'10:00',end:'11:50',name:'Linear Algebra',code:'MT-101',room:'A1-205',teacher:'Dr. Nadia',type:'mt'},
+    {time:'13:00',end:'14:50',name:'Free',code:'',room:'',teacher:'',type:'free'},
+    {time:'15:00',end:'16:50',name:'HCI Lecture',code:'CS-401',room:'C3-110',teacher:'Dr. Hira',type:'hci'},
+  ],
+  tue:[
+    {time:'08:00',end:'09:50',name:'Data Structures',code:'CS-203',room:'B4-312',teacher:'Dr. Ahmed',type:'cs'},
+    {time:'10:00',end:'11:50',name:'OOP Lab',code:'CS-204L',room:'B2-101',teacher:'Ms. Sana',type:'lab'},
+    {time:'13:00',end:'14:50',name:'Linear Algebra',code:'MT-101',room:'A2-307',teacher:'Dr. Nadia',type:'mt'},
+    {time:'15:30',end:'17:20',name:'HCI Lecture',code:'CS-401',room:'C3-110',teacher:'Dr. Hira',type:'hci'},
+  ],
+  wed:[
+    {time:'08:00',end:'09:50',name:'Data Structures',code:'CS-203',room:'B4-312',teacher:'Dr. Ahmed',type:'cs'},
+    {time:'10:00',end:'11:50',name:'Digital Logic Design',code:'EE-201',room:'B3-210',teacher:'Dr. Raza',type:'cs'},
+    {time:'13:00',end:'14:50',name:'Free',code:'',room:'',teacher:'',type:'free'},
+  ],
+  thu:[
+    {time:'08:00',end:'09:50',name:'HCI Lab',code:'CS-401L',room:'C2-Lab3',teacher:'Dr. Hira',type:'lab'},
+    {time:'10:00',end:'11:50',name:'Linear Algebra',code:'MT-101',room:'A1-205',teacher:'Dr. Nadia',type:'mt'},
+    {time:'13:00',end:'14:50',name:'OOP Lecture',code:'CS-204',room:'B4-301',teacher:'Ms. Sana',type:'cs'},
+  ],
+  fri:[
+    {time:'08:00',end:'09:50',name:'Data Structures Lab',code:'CS-203L',room:'C1-Lab1',teacher:'Dr. Ahmed',type:'lab'},
+    {time:'11:00',end:'12:50',name:'OOP Lecture',code:'CS-204',room:'B4-301',teacher:'Ms. Sana',type:'cs'},
+  ],
+  sat:[
+    {time:'09:00',end:'10:50',name:'HCI Lab',code:'CS-401L',room:'C2-Lab3',teacher:'Dr. Hira',type:'lab'},
+  ]
+};
+
+const typeColors = { cs:'#3b7cf4', mt:'#f5a623', hci:'#0ea5a0', lab:'#a855f7', free:'#3a4d63' };
+
+function switchDay(el, day) {
+  document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderDay(day);
+}
+
+function renderDay(day) {
+  const slots = schedule[day] || [];
+  const body = document.getElementById('scheduleBody');
+  if (!slots.length) {
+    body.innerHTML = `<div style="text-align:center;padding:40px 20px;color:var(--white-faint);font-size:13px;">No classes scheduled</div>`;
+    return;
+  }
+  const today = ['sun','mon','tue','wed','thu','fri','sat'][new Date().getDay()];
+
+  let html = `<div class="card-label" style="margin-bottom:6px;">${slots.filter(s=>s.type!=='free').length} classes scheduled</div>`;
+  slots.forEach(s => {
+    const isNow = day === today && isCurrentSlot(s.time, s.end);
+    html += `<div class="slot">
+      <div class="time-col">${s.time}</div>
+      <div class="slot-card ${s.type}" style="${isNow ? 'box-shadow:0 0 0 1px var(--accent);' : ''}">
+        ${isNow ? '<div class="badge badge-green" style="margin-bottom:6px;font-size:10px;">● NOW</div>' : ''}
+        ${s.type === 'free'
+          ? `<div class="slot-name" style="color:var(--white-faint);">Free period</div>`
+          : `<div class="slot-name">${s.name}</div>
+             <div class="slot-meta">${s.teacher} · ${s.time}–${s.end}</div>
+             <div class="slot-room">${s.code} · ${s.room}</div>
+             <div style="margin-top:8px;">
+               <a href="map.html" style="font-size:11px;color:var(--accent);text-decoration:none;">Navigate → ${s.room}</a>
+             </div>`
+        }
+      </div>
+    </div>`;
+  });
+
+  // weekly summary
+  const total = Object.values(schedule).flat().filter(s=>s.type!=='free').length;
+  html += `<div class="card" style="margin-top:4px;">
+    <div class="card-label">Week at a glance</div>
+    <div class="week-summary">
+      <div class="sum-box"><div class="stat-val t-accent">${total}</div><div class="stat-lbl">Total classes</div></div>
+      <div class="sum-box"><div class="stat-val" style="color:var(--amber);">4</div><div class="stat-lbl">Lab sessions</div></div>
+      <div class="sum-box"><div class="stat-val" style="color:var(--green);">92%</div><div class="stat-lbl">Attendance</div></div>
+    </div>
+  </div>`;
+
+  body.innerHTML = html;
+}
+
+function isCurrentSlot(start, end) {
+  const now = new Date();
+  const [sh,sm] = start.split(':').map(Number);
+  const [eh,em] = end.split(':').map(Number);
+  const nowMin = now.getHours()*60+now.getMinutes();
+  return nowMin >= sh*60+sm && nowMin <= eh*60+em;
+}
+
+renderDay('tue');
+</script>
+<script src="theme.js"></script>
+</body>
+</html>

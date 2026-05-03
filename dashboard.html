@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CampusNav — Dashboard</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .greeting-bar {
+    background: var(--navy-mid);
+    border-bottom: 1px solid var(--navy-border);
+    padding: 16px 20px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .greeting-name { font-size: 17px; font-weight: 600; color: var(--white); }
+  .greeting-date { font-size: 12px; color: var(--white-dim); margin-top: 2px; }
+
+  .alert-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--red);
+    position: absolute;
+    top: -2px; right: -2px;
+  }
+  .notif-btn {
+    position: relative;
+    width: 36px; height: 36px;
+    background: var(--navy-light);
+    border: 1px solid var(--navy-border);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    text-decoration: none;
+    transition: border-color .15s;
+  }
+  .notif-btn:hover { border-color: var(--accent); }
+  .notif-btn svg { width: 16px; height: 16px; color: var(--white-dim); }
+
+  .now-strip {
+    background: var(--accent-dim);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .now-pulse {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--green);
+    flex-shrink: 0;
+    box-shadow: 0 0 0 0 rgba(34,201,122,.5);
+    animation: pulse 1.6s infinite;
+  }
+  @keyframes pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(34,201,122,.5); }
+    70%  { box-shadow: 0 0 0 7px rgba(34,201,122,0); }
+    100% { box-shadow: 0 0 0 0 rgba(34,201,122,0); }
+  }
+
+  .progress-bar {
+    height: 4px;
+    background: var(--navy-light);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 6px;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width .8s ease;
+  }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <div class="greeting-bar">
+    <div>
+      <div class="greeting-name">Good morning, Ali 👋</div>
+      <div class="greeting-date" id="dateStr"></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <a class="notif-btn" href="alerts.html">
+        <svg viewBox="0 0 20 20" fill="currentColor">
+          <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-2.83-2h5.66A3 3 0 0110 18z"/>
+        </svg>
+        <div class="alert-dot"></div>
+      </a>
+      <button class="theme-toggle-btn" id="themeToggle" onclick="window.__themeToggle()" title="Toggle theme">🌙</button>
+      <div class="avatar">AK</div>
+    </div>
+  </div>
+
+  <div class="page-body">
+
+    <!-- Now in class -->
+    <div class="now-strip">
+      <div class="now-pulse"></div>
+      <div class="col" style="flex:1;">
+        <div class="t-primary" style="font-size:13px;">Now: Data Structures — Lec 14</div>
+        <div class="t-tiny">Room B4-312 · Dr. Ahmed · ends 09:50</div>
+      </div>
+      <a href="map.html" class="badge badge-blue" style="text-decoration:none;">Navigate →</a>
+    </div>
+
+    <!-- Today's classes -->
+    <div class="card">
+      <div class="card-label">Today's classes</div>
+
+      <div class="class-row">
+        <div class="class-time">08:00</div>
+        <div class="icon-box ib-blue">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/></svg>
+        </div>
+        <div class="col" style="flex:1;">
+          <div class="t-primary" style="font-size:13px;">Data Structures</div>
+          <div class="t-tiny t-mono">CS-203 · B4-312</div>
+        </div>
+        <div class="badge badge-green">Ongoing</div>
+      </div>
+
+      <div class="class-row">
+        <div class="class-time">10:00</div>
+        <div class="icon-box ib-teal">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"/></svg>
+        </div>
+        <div class="col" style="flex:1;">
+          <div class="t-primary" style="font-size:13px;">OOP Lab</div>
+          <div class="t-tiny t-mono">CS-204L · B2-101</div>
+        </div>
+        <div class="badge badge-amber">In 52 min</div>
+      </div>
+
+      <div class="class-row">
+        <div class="class-time">13:00</div>
+        <div class="icon-box ib-amber">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"/><path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"/></svg>
+        </div>
+        <div class="col" style="flex:1;">
+          <div class="t-primary" style="font-size:13px;">Linear Algebra</div>
+          <div class="t-tiny t-mono">MT-101 · A1-205</div>
+        </div>
+        <div class="badge badge-gray">Afternoon</div>
+      </div>
+
+      <div class="class-row">
+        <div class="class-time">15:30</div>
+        <div class="icon-box" style="background:#1a1a3a;color:#a78bfa;">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/></svg>
+        </div>
+        <div class="col" style="flex:1;">
+          <div class="t-primary" style="font-size:13px;">HCI Lecture</div>
+          <div class="t-tiny t-mono">CS-401 · C3-110</div>
+        </div>
+        <div class="badge badge-gray">Later</div>
+      </div>
+
+      <div class="progress-bar" style="margin-top:10px;">
+        <div class="progress-fill" style="width:25%;"></div>
+      </div>
+      <div class="t-tiny" style="margin-top:5px;">1 of 4 classes completed today</div>
+    </div>
+
+    <!-- Quick actions -->
+    <div>
+      <div class="card-label" style="margin-bottom:10px;">Quick access</div>
+      <div class="tile-grid">
+        <a class="tile" href="map.html">
+          <div class="tile-icon">🗺️</div>
+          <div class="tile-name">Find room</div>
+          <div class="tile-sub">Navigate campus</div>
+        </a>
+        <a class="tile" href="alerts.html">
+          <div class="tile-icon">🔔</div>
+          <div class="tile-name">Alerts</div>
+          <div class="tile-sub">2 new today</div>
+        </a>
+        <a class="tile" href="timetable.html">
+          <div class="tile-icon">📅</div>
+          <div class="tile-name">Timetable</div>
+          <div class="tile-sub">Today's schedule</div>
+        </a>
+        <a class="tile" href="places.html">
+          <div class="tile-icon">🏛️</div>
+          <div class="tile-name">Places</div>
+          <div class="tile-sub">Labs, BCR, canteen…</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stat-grid">
+      <div class="stat-box">
+        <div class="stat-val t-accent">4</div>
+        <div class="stat-lbl">Classes today</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" style="color:var(--amber);">2</div>
+        <div class="stat-lbl">Alerts</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" style="color:var(--green);">92%</div>
+        <div class="stat-lbl">Attendance</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" style="color:var(--teal);">14</div>
+        <div class="stat-lbl">Weeks left</div>
+      </div>
+    </div>
+
+  </div>
+
+  <nav class="bottom-nav">
+    <a class="nav-item active" href="dashboard.html"><svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>Home</a>
+    <a class="nav-item" href="map.html"><svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M12 1.586l-4 4v12.828l4-4V1.586zM3.707 3.293A1 1 0 002 4v10a1 1 0 00.293.707L6 18.414V5.586L3.707 3.293zM17.707 5.293L14 1.586v12.828l2.293 2.293A1 1 0 0018 16V6a1 1 0 00-.293-.707z"/></svg>Map</a>
+    <a class="nav-item" href="timetable.html"><svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"/></svg>Schedule</a>
+    <a class="nav-item" href="alerts.html"><svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-2.83-2h5.66A3 3 0 0110 18z"/></svg>Alerts</a>
+    <a class="nav-item" href="places.html"><svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"/></svg>Places</a>
+  </nav>
+
+</div>
+<script>
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const d = new Date();
+  document.getElementById('dateStr').textContent =
+    `${days[d.getDay()]} · ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+</script>
+<script src="theme.js"></script>
+</body>
+</html>

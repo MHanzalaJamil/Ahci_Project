@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CampusNav — Places</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .cat-scroll { display:flex; overflow-x:auto; gap:8px; padding:12px 16px; background:var(--navy-mid); border-bottom:1px solid var(--navy-border); scrollbar-width:none; flex-shrink:0; }
+  .cat-scroll::-webkit-scrollbar { display:none; }
+  .cat-chip { flex-shrink:0; display:flex; align-items:center; gap:6px; padding:7px 14px; border-radius:20px; font-size:12px; font-weight:500; cursor:pointer; border:1px solid var(--navy-border); color:var(--white-dim); background:var(--navy-light); transition:all .2s; }
+  .cat-chip.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+  .cat-chip:hover:not(.active) { border-color:var(--accent); color:var(--accent); }
+  .cat-chip .chip-icon { font-size:14px; }
+
+  .place-card { cursor:pointer; transition:border-color .2s, background .2s; text-decoration:none; display:block; }
+  .place-card:hover { border-color:var(--accent); background:#0d1e38; text-decoration:none; }
+  .place-header { display:flex; align-items:flex-start; gap:12px; }
+  .place-icon { width:44px; height:44px; border-radius:var(--radius-sm); display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
+  .place-info { flex:1; }
+  .place-name { font-size:14px; font-weight:500; color:var(--white); }
+  .place-sub  { font-size:11px; color:var(--white-dim); margin-top:2px; }
+  .place-tags { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
+  .place-footer { display:flex; align-items:center; justify-content:space-between; margin-top:10px; padding-top:10px; border-top:1px solid var(--navy-border); }
+
+  .status-open   { color:var(--green); }
+  .status-closed { color:var(--red); }
+  .status-busy   { color:var(--amber); }
+
+  .capacity-bar { height:4px; background:var(--navy-light); border-radius:2px; overflow:hidden; width:80px; }
+  .capacity-fill { height:100%; border-radius:2px; transition:width .6s; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <div class="topbar">
+    <a class="topbar-back" href="dashboard.html"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"/></svg></a>
+    <div><div class="topbar-title">Campus Places</div><div class="topbar-sub">Find rooms, labs & facilities</div></div>
+  </div>
+
+  <div style="padding:10px 16px; background:var(--navy-mid); border-bottom:1px solid var(--navy-border); flex-shrink:0;">
+    <div class="search-bar">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg>
+      <input type="text" placeholder="Search places…" id="placeSearch" oninput="filterPlaces()">
+    <button class="theme-toggle-btn" id="themeToggle" onclick="window.__themeToggle()" title="Toggle theme">🌙</button>
+  </div>
+">
+    <div class="cat-chip active" onclick="filterCat(this,'all')"><span class="chip-icon">🏛️</span> All</div>
+    <div class="cat-chip" onclick="filterCat(this,'library')"><span class="chip-icon">📚</span> Library</div>
+    <div class="cat-chip" onclick="filterCat(this,'lab')"><span class="chip-icon">🔬</span> Labs</div>
+    <div class="cat-chip" onclick="filterCat(this,'room')"><span class="chip-icon">🏫</span> Rooms</div>
+    <div class="cat-chip" onclick="filterCat(this,'canteen')"><span class="chip-icon">🍽️</span> Canteen</div>
+    <div class="cat-chip" onclick="filterCat(this,'common')"><span class="chip-icon">🛋️</span> Common</div>
+    <div class="cat-chip" onclick="filterCat(this,'admin')"><span class="chip-icon">🏢</span> Admin</div>
+  </div>
+
+  <div class="page-body" id="placesList"></div>
+
+  <nav class="bottom-nav">
+    <a class="nav-item" href="dashboard.html"><svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>Home</a>
+    <a class="nav-item" href="map.html"><svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12 1.586l-4 4v12.828l4-4V1.586zM3.707 3.293A1 1 0 002 4v10a1 1 0 00.293.707L6 18.414V5.586L3.707 3.293zM17.707 5.293L14 1.586v12.828l2.293 2.293A1 1 0 0018 16V6a1 1 0 00-.293-.707z" clip-rule="evenodd"/></svg>Map</a>
+    <a class="nav-item" href="timetable.html"><svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/></svg>Timetable</a>
+    <a class="nav-item" href="alerts.html"><svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-2.83-2h5.66A3 3 0 0110 18z"/></svg>Alerts</a>
+    <a class="nav-item active" href="places.html"><svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg>Places</a>
+  </nav>
+</div>
+
+<script>
+const places = [
+  // Library
+  { id:'lb1', name:'Main Library', cat:'library', icon:'📚', bg:'#0d2218', code:'LB-01', block:'LB Block', floor:'Ground–3F', hours:'07:00–22:00', status:'open', capacity:65, tags:['Quiet zone','Wi-Fi','Printing','AC'], desc:'Main campus library with 3 floors, study pods, and digital resources.' },
+  { id:'lb2', name:'Digital Library Lab', cat:'library', icon:'💻', bg:'#0d1e38', code:'LB-G02', block:'LB Block', floor:'Ground', hours:'08:00–20:00', status:'open', capacity:40, tags:['Computers','Wi-Fi','Printing'], desc:'40-seat computer lab inside library for e-resources and research.' },
+
+  // Labs
+  { id:'lab1', name:'CS Lab 1', cat:'lab', icon:'🖥️', bg:'#1a0d1e', code:'C1-Lab1', block:'Block C', floor:'1st Floor', hours:'08:00–18:00', status:'open', capacity:30, tags:['Linux','Windows','AC'], desc:'General purpose CS lab with 40 high-spec workstations.' },
+  { id:'lab2', name:'CS Lab 2', cat:'lab', icon:'🖥️', bg:'#1a0d1e', code:'C1-Lab2', block:'Block C', floor:'1st Floor', hours:'08:00–18:00', status:'busy', capacity:88, tags:['Linux','Windows'], desc:'CS Lab 2 — currently in use for a lab session.' },
+  { id:'lab3', name:'HCI Lab', cat:'lab', icon:'🎨', bg:'#0a1e1a', code:'C2-Lab3', block:'Block C', floor:'2nd Floor', hours:'08:00–17:00', status:'open', capacity:20, tags:['Design','Tablets','Eye-tracking'], desc:'Dedicated HCI & UX lab with prototyping and testing equipment.' },
+  { id:'lab4', name:'Electronics Lab', cat:'lab', icon:'⚡', bg:'#1a1a0d', code:'B3-Lab1', block:'Block B', floor:'3rd Floor', hours:'09:00–17:00', status:'open', capacity:50, tags:['Oscilloscopes','PCB'], desc:'Electronics and digital circuits lab with full hardware setup.' },
+  { id:'lab5', name:'Network Lab', cat:'lab', icon:'🌐', bg:'#0d1e38', code:'C3-Lab2', block:'Block C', floor:'3rd Floor', hours:'09:00–17:00', status:'closed', capacity:0, tags:['Cisco','Servers'], desc:'Cisco-certified networking lab. Closed for maintenance today.' },
+
+  // Rooms
+  { id:'rm1', name:'Lecture Hall B4-312', cat:'room', icon:'🏫', bg:'#0d1e38', code:'B4-312', block:'Block B', floor:'3rd Floor', hours:'08:00–18:00', status:'busy', capacity:95, tags:['Projector','AC','60 seats'], desc:'Main lecture hall for CS-203 Data Structures.' },
+  { id:'rm2', name:'Seminar Room A2-307', cat:'room', icon:'🏫', bg:'#0d2218', code:'A2-307', block:'Block A', floor:'3rd Floor', hours:'08:00–18:00', status:'open', capacity:30, tags:['Projector','Whiteboard'], desc:'Small seminar room, currently used for MT-101.' },
+  { id:'rm3', name:'Auditorium', cat:'room', icon:'🎭', bg:'#1a1a1a', code:'AU-01', block:'Admin Block', floor:'Ground', hours:'09:00–20:00', status:'open', capacity:15, tags:['300 seats','Stage','AV system'], desc:'Main campus auditorium for events, seminars, and convocations.' },
+
+  // Canteen / Dining
+  { id:'cn1', name:'Main Canteen', cat:'canteen', icon:'🍽️', bg:'#1a1200', code:'CN-01', block:'Ground Floor', floor:'Near Gate A', hours:'07:30–21:00', status:'open', capacity:60, tags:['Hot meals','Snacks','Seating'], desc:'Main campus canteen serving breakfast, lunch, and dinner.' },
+  { id:'cn2', name:'Juice & Snacks Corner', cat:'canteen', icon:'🧃', bg:'#0d1a0a', code:'CN-02', block:'Block B', floor:'Ground Floor', hours:'08:00–20:00', status:'open', capacity:80, tags:['Juice','Sandwiches','Cold drinks'], desc:'Quick snack bar near Block B entrance.' },
+  { id:'cn3', name:'Faculty Cafeteria', cat:'canteen', icon:'☕', bg:'#1a0d00', code:'CN-03', block:'Admin Block', floor:'1st Floor', hours:'09:00–17:00', status:'open', capacity:45, tags:['Coffee','Lunch','Faculty only'], desc:'Reserved cafeteria for faculty — students may use during off-hours.' },
+
+  // Common Rooms
+  { id:'bcr1', name:'Boys Common Room (BCR)', cat:'common', icon:'🛋️', bg:'#0d1e38', code:'BCR-01', block:'Block C', floor:'Ground Floor', hours:'07:00–22:00', status:'open', capacity:55, tags:['Seating','TV','AC','Charging'], desc:'Main relaxation area for male students with TV lounge and charging stations.' },
+  { id:'gcr1', name:'Girls Common Room (GCR)', cat:'common', icon:'🛋️', bg:'#1a0d1e', code:'GCR-01', block:'Block A', floor:'Ground Floor', hours:'07:00–22:00', status:'open', capacity:40, tags:['Seating','AC','Prayer area','Charging'], desc:'Dedicated relaxation and prayer area for female students.' },
+  { id:'st1', name:'Student Society Room', cat:'common', icon:'🎯', bg:'#0d1a1a', code:'SS-01', block:'Block A', floor:'1st Floor', hours:'10:00–18:00', status:'open', capacity:35, tags:['Events','Meetings','Projector'], desc:'Base for all student societies — SOFTEC, ACM, PROCOM.' },
+
+  // Admin / Services
+  { id:'adm1', name:'Admin Office', cat:'admin', icon:'🏢', bg:'#1a1a1a', code:'AD-G01', block:'Admin Block', floor:'Ground Floor', hours:'09:00–17:00', status:'open', capacity:90, tags:['Fee','Documents','Registrar'], desc:'Main admin office for fee payments, documents, and registrations.' },
+  { id:'adm2', name:'IT Support Desk', cat:'admin', icon:'🛠️', bg:'#0d1e38', code:'IT-G02', block:'Admin Block', floor:'Ground Floor', hours:'09:00–17:00', status:'open', capacity:100, tags:['Wi-Fi help','Portal issues','Hardware'], desc:'IT helpdesk for portal issues, network support, and hardware problems.' },
+  { id:'adm3', name:'Medical / First Aid', cat:'admin', icon:'🏥', bg:'#1a0d0d', code:'HC-01', block:'Admin Block', floor:'Ground Floor', hours:'08:00–18:00', status:'open', capacity:100, tags:['First aid','Nurse on duty','Medicines'], desc:'On-campus medical room with a nurse available during working hours.' },
+  { id:'adm4', name:'Prayer Hall (Masjid)', cat:'admin', icon:'🕌', bg:'#0a1e12', code:'MS-01', block:'Near Gate B', floor:'Ground', hours:'05:00–22:00', status:'open', capacity:10, tags:['Wudu area','Separate sections','AC'], desc:'Campus mosque open for all five prayers daily.' },
+];
+
+let activeCat = 'all';
+let searchQ = '';
+
+function filterCat(el, cat) {
+  activeCat = cat;
+  document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  render();
+}
+
+function filterPlaces() {
+  searchQ = document.getElementById('placeSearch').value.toLowerCase();
+  render();
+}
+
+function statusClass(s) { return s === 'open' ? 'status-open' : s === 'busy' ? 'status-busy' : 'status-closed'; }
+function statusLabel(s) { return s === 'open' ? '● Open' : s === 'busy' ? '◑ Busy' : '○ Closed'; }
+function capColor(p) { return p > 80 ? '#f04848' : p > 50 ? '#f5a623' : '#22c97a'; }
+
+function render() {
+  const filtered = places.filter(p => {
+    const matchCat = activeCat === 'all' || p.cat === activeCat;
+    const matchQ   = !searchQ || p.name.toLowerCase().includes(searchQ) || p.code.toLowerCase().includes(searchQ) || p.desc.toLowerCase().includes(searchQ);
+    return matchCat && matchQ;
+  });
+
+  const body = document.getElementById('placesList');
+  if (!filtered.length) {
+    body.innerHTML = `<div style="text-align:center;padding:40px;color:var(--white-faint);font-size:13px;">No places found</div>`;
+    return;
+  }
+
+  body.innerHTML = `<div class="t-tiny" style="margin-bottom:2px;">${filtered.length} place${filtered.length!==1?'s':''} found</div>` +
+    filtered.map(p => `
+    <a class="card place-card" href="place-detail.html?id=${p.id}" style="background:${p.bg}20;">
+      <div class="place-header">
+        <div class="place-icon" style="background:${p.bg};">${p.icon}</div>
+        <div class="place-info">
+          <div class="place-name">${p.name}</div>
+          <div class="place-sub">${p.block} · ${p.floor}</div>
+        </div>
+        <div class="t-mono" style="font-size:10px;color:var(--white-faint);flex-shrink:0;">${p.code}</div>
+      </div>
+      <div class="place-tags">
+        ${p.tags.map(t => `<div class="badge badge-gray" style="font-size:10px;">${t}</div>`).join('')}
+      </div>
+      <div class="place-footer">
+        <div>
+          <div class="t-tiny ${statusClass(p.status)}" style="font-size:12px;">${statusLabel(p.status)}</div>
+          <div class="t-tiny">⏱ ${p.hours}</div>
+        </div>
+        <div style="text-align:right;">
+          ${p.status !== 'closed' ? `
+          <div class="t-tiny" style="margin-bottom:4px;">Capacity: ${p.capacity}%</div>
+          <div class="capacity-bar"><div class="capacity-fill" style="width:${p.capacity}%;background:${capColor(p.capacity)};"></div></div>` : `<div class="t-tiny status-closed">Unavailable today</div>`}
+        </div>
+      </div>
+    </a>`).join('');
+}
+
+render();
+</script>
+<script src="theme.js"></script>
+</body>
+</html>

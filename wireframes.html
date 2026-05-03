@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CampusNav — Wireframes</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  body { background:#1a1a1a; }
+  .wf-page { background:#f5f5f0; min-height:100vh; font-family: 'Courier New', monospace; }
+  .wf-header { background:#222; color:#eee; padding:20px 28px; display:flex; align-items:center; justify-content:space-between; }
+  .wf-header h1 { font-size:18px; font-weight:600; letter-spacing:.04em; }
+  .wf-header span { font-size:12px; color:#888; }
+  .wf-body { padding:28px; }
+  .wf-title { font-size:13px; font-weight:700; color:#333; letter-spacing:.08em; text-transform:uppercase; margin-bottom:20px; border-bottom:2px solid #333; padding-bottom:6px; }
+  .wf-grid { display:flex; flex-wrap:wrap; gap:32px; justify-content:flex-start; }
+
+  .wf-phone { width:200px; display:flex; flex-direction:column; gap:8px; }
+  .wf-phone-label { font-size:11px; color:#555; text-align:center; font-weight:700; letter-spacing:.06em; text-transform:uppercase; }
+  .wf-frame { width:200px; border:2px solid #333; border-radius:16px; overflow:hidden; background:#fff; box-shadow:4px 4px 0 #ccc; }
+  .wf-status { height:18px; background:#333; display:flex; align-items:center; justify-content:space-between; padding:0 10px; }
+  .wf-status span { background:#888; border-radius:2px; height:4px; }
+  .wf-topbar { background:#333; height:32px; display:flex; align-items:center; padding:0 10px; gap:8px; }
+  .wf-topbar .back-box { width:18px; height:18px; border:1.5px solid #888; border-radius:50%; }
+  .wf-topbar .title-lines { display:flex; flex-direction:column; gap:3px; }
+  .wf-topbar .tl { height:5px; background:#888; border-radius:2px; }
+  .wf-topbar .tl.long { width:80px; }
+  .wf-topbar .tl.short { width:50px; }
+  .wf-topbar .avatar-box { width:18px; height:18px; border:1.5px solid #888; border-radius:50%; margin-left:auto; }
+  .wf-topbar .sun-box { width:18px; height:18px; border:1.5px solid #888; border-radius:50%; }
+
+  .wf-content { padding:10px; display:flex; flex-direction:column; gap:6px; min-height:280px; }
+  .box { border:1.5px solid #333; border-radius:4px; background:#f0f0f0; }
+  .box.h8  { height:8px; }
+  .box.h10 { height:10px; }
+  .box.h14 { height:14px; }
+  .box.h20 { height:20px; }
+  .box.h28 { height:28px; }
+  .box.h36 { height:36px; }
+  .box.h48 { height:48px; }
+  .box.h60 { height:60px; }
+  .box.h80 { height:80px; }
+  .box.h100{ height:100px; }
+  .box.h120{ height:120px; }
+  .box.dark { background:#333; border-color:#333; }
+  .box.mid  { background:#888; border-color:#888; }
+  .box.label-box { display:flex; align-items:center; justify-content:center; font-size:8px; color:#555; font-weight:600; letter-spacing:.04em; }
+  .row2 { display:flex; gap:6px; }
+  .row2 > * { flex:1; }
+  .row3 { display:flex; gap:4px; }
+  .row3 > * { flex:1; }
+  .wf-nav { height:36px; background:#f0f0f0; border-top:1.5px solid #333; display:flex; }
+  .wf-nav-item { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; border-right:1px solid #ccc; }
+  .wf-nav-item:last-child { border-right:none; }
+  .wf-nav-dot { width:10px; height:10px; border:1.5px solid #555; border-radius:2px; }
+  .wf-nav-dot.active { background:#333; border-color:#333; }
+  .wf-nav-lbl { height:4px; width:16px; background:#aaa; border-radius:1px; }
+
+  .annotation { font-size:10px; color:#333; margin-top:4px; line-height:1.5; }
+  .annotation strong { color:#000; }
+
+  .wf-section { margin-bottom:40px; }
+
+  .legend-box { background:#fff; border:2px solid #333; border-radius:8px; padding:16px; margin-bottom:24px; box-shadow:3px 3px 0 #ccc; max-width:500px; }
+  .legend-box h3 { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; margin-bottom:10px; }
+  .legend-row { display:flex; align-items:center; gap:10px; margin-bottom:6px; font-size:11px; }
+  .leg-swatch { width:28px; height:14px; border:1.5px solid #333; border-radius:2px; flex-shrink:0; }
+</style>
+</head>
+<body>
+<div class="wf-page">
+  <div class="wf-header">
+    <h1>📐 Low-Fidelity Wireframes — CampusNav</h1>
+    <span>AHCI Project · FAST NUCES · Spring 2026</span>
+  </div>
+  <div class="wf-body">
+
+    <!-- Legend -->
+    <div class="legend-box">
+      <h3>Wireframe Legend</h3>
+      <div class="legend-row"><div class="leg-swatch" style="background:#333;"></div> Dark filled = Primary UI element / nav bar</div>
+      <div class="legend-row"><div class="leg-swatch" style="background:#888;"></div> Medium grey = Secondary element / image placeholder</div>
+      <div class="legend-row"><div class="leg-swatch" style="background:#f0f0f0;"></div> Light grey = Content block / card</div>
+      <div class="legend-row"><div class="leg-swatch" style="background:#fff;border:1.5px solid #333;"></div> White = Input field / interactive area</div>
+    </div>
+
+    <!-- Screen 1: Login -->
+    <div class="wf-section">
+      <div class="wf-title">Screen 1 — Login</div>
+      <div class="wf-grid">
+        <div class="wf-phone">
+          <div class="wf-frame">
+            <div class="wf-status"><span style="width:20px;"></span><span style="width:30px;"></span></div>
+            <!-- Hero -->
+            <div style="background:#333;padding:20px 10px 14px;display:flex;flex-direction:column;align-items:center;gap:6px;">
+              <div style="width:36px;height:36px;border:2px solid #888;border-radius:8px;background:#555;"></div>
+              <div style="width:70px;height:8px;background:#888;border-radius:2px;"></div>
+              <div style="width:90px;height:5px;background:#555;border-radius:2px;"></div>
+            </div>
+            <div class="wf-content" style="gap:8px;">
+              <div class="box h14 label-box" style="background:#e8e8e8;">SIGN IN CARD</div>
+              <div style="height:5px;"></div>
+              <div class="box h8 label-box" style="width:50%;background:transparent;border:none;font-size:7px;">Roll Number</div>
+              <div class="box h20" style="background:#fff;"></div>
+              <div class="box h8 label-box" style="width:40%;background:transparent;border:none;font-size:7px;">Password</div>
+              <div class="box h20" style="background:#fff;"></div>
+              <div class="row2" style="margin-top:2px;">
+                <div class="box h8 label-box" style="border:none;background:transparent;font-size:7px;justify-content:flex-start;">☐ Remember me</div>
+                <div class="box h8 label-box" style="border:none;background:transparent;font-size:7px;justify-content:flex-end;">Forgot?</div>
+              </div>
+              <div class="box h28 dark label-box" style="color:#fff;margin-top:4px;font-size:8px;">SIGN IN BUTTON</div>
+              <div class="box h8 label-box" style="border:none;background:transparent;font-size:7px;">— or —</div>
+              <div class="box h20 label-box" style="font-size:7px;">GUEST BUTTON</div>
+            </div>
+          </div>
+          <div class="wf-phone-label">Login Screen</div>
+          <div class="annotation">
+            <strong>Elements:</strong> Logo hero, roll no. field, password (masked), remember me checkbox, sign-in CTA, guest access link
+          </div>
+        </div>
+
+        <!-- Screen 2: Dashboard -->
+        <div class="wf-phone">
+          <div class="wf-frame">
+            <div class="wf-status"><span style="width:20px;"></span><span style="width:30px;"></span></div>
+            <div class="wf-topbar">
+              <div class="wf-topbar title-lines" style="flex:1;">
+                <div style="width:90px;height:6px;background:#888;border-radius:2px;"></div>
+                <div style="width:60px;height:4px;background:#555;border-radius:2px;margin-top:3px;"></div>
+              </div>
+              <div class="wf-topbar sun-box"></div>
+              <div class="wf-topbar avatar-box"></div>
+            </div>
+            <div class="wf-content">
+              <div class="box h20 label-box" style="background:#555;color:#eee;font-size:7px;">● NOW IN CLASS STRIP</div>
+              <div class="box h8 label-box" style="border:none;background:transparent;font-size:7px;">TODAY'S CLASSES</div>
+              <div class="box h60 label-box" style="font-size:7px;flex-direction:column;gap:3px;">
+                <div style="width:90%;height:10px;background:#ccc;border-radius:2px;"></div>
+                <div style="width:90%;height:10px;background:#ccc;border-radius:2px;"></div>
+                <div style="width:90%;height:10px;background:#ccc;border-radius:2px;"></div>
+              </div>
+              <div class="box h8 label-box" style="border:none;background:transparent;font-size:7px;">QUICK TILES</div>
+              <div class="row2">
+                <div class="box h36 label-box" style="font-size:7px;flex-direction:column;gap:2px;"><div style="width:14px;height:14px;background:#888;border-radius:3px;"></div>Find Room</div>
+                <div class="box h36 label-box" style="font-size:7px;flex-direction:column;gap:2px;"><div style="width:14px;height:14px;background:#888;border-radius:3px;"></div>Alerts</div>
+              </div>
+              <div class="row2">
+                <div class="box h36 label-box" style="font-size:7px;flex-direction:column;gap:2px;"><div style="width:14px;height:14px;background:#888;border-radius:3px;"></div>Timetable</div>
+                <div class="box h36 label-box" style="font-size:7px;flex-direction:column;gap:2px;"><div style="width:14px;height:14px;background:#888;border-radius:3px;"></div>Places</div>
+              </div>
+              <div class="row2" style="margin-top:4px;">
+                <div class="box h28 label-box mid" style="color:#fff;font-size:7px;">STAT</div>
+                <div class="box h28 label-box mid" style="color:#fff;font-size:7px;">STAT</div>
+              </div>
+            </div>
+            <div class="wf-nav">
+              <div class="wf-nav-item"><div class="wf-nav-dot active"></div><div class="wf-nav-lbl"></div></div>
+              <div class="wf-nav-item"><div class="wf-nav-dot"></div><div class="wf-nav-lbl"></div></div>
+              <div class="wf-nav-item"><div class="wf-nav-dot"></div><div class="wf-nav-lbl"></div></div>
+              <div class="wf-nav-item"><div class="wf-nav-dot"></div><div class="wf-nav-lbl"></div></div>
+              <div class="wf-nav-item"><div class="wf-nav-dot"></div><div class="wf-nav-lbl"></div></div>
+            </div>
+          </div>
+          <div class="wf-phone-label">Dashboard</div>
+          <div class="annotation">
+            <strong>Elements:</strong> Greeting + date, live class strip, class list, 4 quick tiles, stats row, 5-tab nav
+          </div>
+        </div>
+
+        <!-- Screen 3: Map -->
+        <div class="wf-phone">
+          <div class="wf-frame">
+            <div class="wf-status"><span style="width:20px;"></span><span style="width:30px;"></span></div>
+            <div class="wf-topbar"><div class="back-box"></div><div class="title-lines" style="flex:1;"><div class="tl long"></div><div class="tl short" style="margin-top:3px;"></div></div><div class="sun-box"></div></div>
+            <div style="padding:6px 10px;background:#e8e8e8;border-bottom:1px solid #ccc;"><div class="box h20" style="background:#fff;"></div></div>
+            <!-- Map placeholder -->
+            <div style="height:140px;background:#ccc;border:1.5px solid #333;position:relative;margin:0;overflow:hidden;">
+              <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:8px;color:#555;font-weight:700;letter-spacing:.04em;">CAMPUS MAP SVG</div>
+              <!-- block rects -->
+              <div style="position:absolute;top:10px;left:10px;width:55px;height:45px;border:1.5px solid #555;background:#bbb;display:flex;align-items:center;justify-content:center;font-size:6px;color:#333;">Block A</div>
+              <div style="position:absolute;top:10px;right:10px;width:55px;height:45px;border:2px solid #333;background:#999;display:flex;align-items:center;justify-content:center;font-size:6px;color:#fff;">Block B ★</div>
+              <div style="position:absolute;bottom:10px;left:10px;width:55px;height:45px;border:1.5px solid #555;background:#bbb;display:flex;align-items:center;justify-content:center;font-size:6px;color:#333;">Block C</div>
+              <div style="position:absolute;bottom:10px;right:10px;width:55px;height:45px;border:1.5px solid #555;background:#bbb;display:flex;align-items:center;justify-content:center;font-size:6px;color:#333;">Library</div>
+              <svg style="position:absolute;inset:0;width:100%;height:100%;" viewBox="0 0 200 140">
+                <path d="M45 112 L100 70 L155 28" stroke="#333" stroke-width="2" fill="none" stroke-dasharray="5,3"/>
+                <circle cx="45" cy="112" r="5" fill="#333"/>
+                <circle cx="155" cy="28" r="5" fill="#333"/>
+              </svg>
+            </div>
+            <div class="wf-content" style="padding:8px 10px;gap:5px;">
+              <div class="row2">
+                <div>
+                  <div class="box h8 label-box" style="border:none;background:transparent;font-size:7px;justify-content:flex-start;">DESTINATION</div>
+                  <div class="box h14 label-box" style="font-size:7px;margin-top:3px;">B4 · Floor 3 · Rm 312</div>
+                </div>
+                <div class="box h20 label-box mid" style="color:#fff;font-size:7px;margin-top:10px;">BADGE</div>
+              </div>
+              <div class="row3">
+                <div class="box h20 label-box" style="font-size:7px;flex-direction:column;">BLD<br/>B4</div>
+                <div class="box h20 label-box" style="font-size:7px;flex-direction:column;">FLR<br/>3rd</div>
+                <div class="box h20 label-box" style="font-size:7px;flex-direction:column;">ETA<br/>7m</div>
+              </div>
+              <div class="box h8 label-box" style="border:none;background:transparent;font-size:7px;">STEP-BY-STEP DIRECTIONS</div>
+              <div class="box h36 label-box" style="font-size:7px;flex-direction:column;gap:3px;">
+                <div style="width:90%;height:7px;background:#ccc;border-radius:2px;"></div>
+                <div style="width:90%;height:7px;background:#ccc;border-radius:2px;"></div>
+                <div style="width:90%;height:7px;background:#ccc;border-radius:2px;"></div>
+              </div>
+            </div>
+            <div class="wf-nav">
+              <div class="wf-nav-item"><div class="wf-nav-dot"></div><div class="wf-nav-lbl"></div></div>
+              <div class="wf-nav-item"><div class="wf-nav-dot active"></div><div class="wf-nav-lbl"></div></div>
+              <div class="wf-nav-item"><div class="wf-nav-dot"></div><div class="wf-nav-lbl"></div></div>
+              <div class="wf-nav-item"><div class="wf-nav-dot"></div><div class="wf-nav-lbl"></div></div>
+              <div class="wf-nav-item"><div class="wf-nav-dot"></div><div class="wf-nav-lbl"></div></div>
+            </div>
+          </div>
+          <div class="wf-phone-label">Map / Navigation</div>
+          <div class="annotation">
+            <strong>Elements:</strong> Search bar, SVG campus map, route dashes, building/floor/ETA chips, step-by-step list
+          </div>
+        </div>
+
+        <!-- Screen 4: Timetable -->
+        <div class="wf-phone">
+          <div class="wf-frame">
+            <div class="wf-status"><span style="width:20px;"></span><span style="width:30px;"></span></div>
+            <div class="wf-topbar"><div class="title-lines" style="flex:1;"><div class="tl long"></div><div class="tl short" style="margin-top:3px;"></div></div><div class="sun-box"></div><div class="avatar-box"></div></div>
+            <!-- Day tabs -->
+            <div style="display:flex;gap:4px;padding:6px 8px;background:#e8e8e8;border-bottom:1px solid #ccc;overflow:hidden;">
+              <div style="flex:1;height:16px;background:#333;border-radius:8px;"></div>
+              <div style="flex:1;height:16px;background:#ccc;border-radius:8px;"></div>
+              <div style="flex:1;height:16px;background:#ccc;border-radius:8px;"></div>
+              <div style="flex:1;height:16px;background:#ccc;border-radius:8px;"></div>
+              <div style="flex:1;height:16px;background:#ccc;border-radius:8px;"></div>
+            </div>
+            <div class="wf-content" style="gap:7px;">
+              <div style="display:flex;gap:6px;align-items:stretch;">
+                <div style="width:24px;display:flex;align-items:center;justify-content:flex-end;"><div style="height:5px;width:20px;background:#888;border-radius:1px;"></div></div>
+                <div class="box h36 label-box" style="flex:1;font-size:7px;border-left:3px solid #333;">CLASS CARD (name, teacher, room)</div>
+              </div>
+              <div style="display:flex;gap:6px;align-items:stretch;">
+                <div style="width:24px;display:flex;align-items:center;justify-content:flex-end;"><div style="height:5px;width:20px;background:#888;border-radius:1px;"></div></div>
+                <div class="box h36 label-box" style="flex:1;font-size:7px;border-left:3px solid #888;">CLASS CARD</div>
+              </div>
+              <div style="display:flex;gap:6px;align-items:stretch;">
+                <div style="width:24px;display:flex;align-items:center;justify-content:flex-end;"><div style="height:5px;width:20px;background:#888;border-radius:1px;"></div></div>
+                <div class="box h36 label-box" style="flex:1;font-size:7px;border-left:3px solid #aaa;">CLASS CARD</div>
+              </div>
+              <div class="box h48 label-box" style="font-size:7px;margin-top:4px;">WEEK SUMMARY (classes, labs, attendance)</div>
+            </div>
+            <div class="wf-nav">
+              <div class="wf-nav-item"><div class="wf-nav-dot"></div><div class="wf-nav-lbl"></div></div>
+              <div class="wf-nav-item"><div class="wf-nav-dot"></div><div class="wf-nav-lbl"></div></div>
+              <div class="wf-nav-item"><div class="wf-nav-dot active"></div><div class="wf-nav-lbl"></div></div>
+              <div class="wf-nav-item"><div class="wf-nav-dot"></div><div class="wf-nav-lbl"></div></div>
+              <div class="wf-nav-item"><div class="wf-nav-dot"></div><div class="wf-nav-lbl"></div></div>
+            </div>
+          </div>
+          <div class="wf-phone-label">Timetable</div>
+          <div class="annotation">
+            <strong>Elements:</strong> Day selector tabs, time column, class cards with colour strip, navigate link, week summary
+          </div>
+        </div>
+
+        <!-- Screen 5: Alerts -->
+        <div class="wf-phone">
+          <div class="wf-frame">
+            <div class="wf-status"><span style="width:20px;"></span><span style="width:30px;"></span></div>
+            <div class="wf-topbar"><div class="title-lines" style="flex:1;"><div class="tl long"></div><div class="tl short" style="margin-top:3px;"></div></div><div class="sun-box"></div><div style="width:32px;height:12px;background:#888;border-radius:3px;margin-left:4px;"></div></div>
+            <div class="wf-content" style="gap:7px;">
+              <div class="box h8 label-box" style="border:none;background:transparent;font-size:7px;justify-content:flex-start;">🔴 URGENT</div>
+              <div class="box h48 label-box" style="border-left:3px solid #333;font-size:7px;flex-direction:column;gap:3px;padding:0 6px;">
+                <div style="width:100%;height:7px;background:#ccc;border-radius:2px;"></div>
+                <div style="width:80%;height:7px;background:#ccc;border-radius:2px;"></div>
+                <div style="width:60%;height:5px;background:#ddd;border-radius:2px;"></div>
+              </div>
+              <div class="box h8 label-box" style="border:none;background:transparent;font-size:7px;justify-content:flex-start;">🟡 NOTICE</div>
+              <div class="box h48 label-box" style="border-left:3px solid #888;font-size:7px;flex-direction:column;gap:3px;padding:0 6px;">
+                <div style="width:100%;height:7px;background:#ccc;border-radius:2px;"></div>
+                <div style="width:80%;height:7px;background:#ccc;border-radius:2px;"></div>
+                <div style="width:60%;height:5px;background:#ddd;border-radius:2px;"></div>
+              </div>
+              <div class="box h8 label-box" style="border:none;background:transparent;font-size:7px;justify-content:flex-start;">🔵 INFO</div>
+              <div class="box h48 label-box" style="border-left:3px solid #aaa;font-size:7px;flex-direction:column;gap:3px;padding:0 6px;">
+                <div style="width:100%;height:7px;background:#ccc;border-radius:2px;"></div>
+                <div style="width:80%;height:7px;background:#ccc;border-radius:2px;"></div>
+              </div>
+            </div>
+            <div class="wf-nav">
+              <div class="wf-nav-item"><div class="wf-nav-dot"></div><div class="wf-nav-lbl"></div></div>
+              <div class="wf-nav-item"><div class="wf-nav-dot"></div><div class="wf-nav-lbl"></div></div>
+              <div class="wf-nav-item"><div class="wf-nav-dot"></div><div class="wf-nav-lbl"></div></div>
+              <div class="wf-nav-item"><div class="wf-nav-dot active"></div><div class="wf-nav-lbl"></div></div>
+              <div class="wf-nav-item"><div class="wf-nav-dot"></div><div class="wf-nav-lbl"></div></div>
+            </div>
+          </div>
+          <div class="wf-phone-label">Alerts</div>
+          <div class="annotation">
+            <strong>Elements:</strong> Severity sections (urgent/notice/info), dismiss on tap, left border colour coding, clear-all button
+          </div>
+        </div>
+
+        <!-- Screen 6: Places -->
+        <div class="wf-phone">
+          <div class="wf-frame">
+            <div class="wf-status"><span style="width:20px;"></span><span style="width:30px;"></span></div>
+            <div class="wf-topbar"><div class="back-box"></div><div class="title-lines" style="flex:1;"><div class="tl long"></div><div class="tl short" style="margin-top:3px;"></div></div><div class="sun-box"></div></div>
+            <div style="padding:6px 10px;background:#e8e8e8;border-bottom:1px solid #ccc;"><div class="box h20" style="background:#fff;"></div></div>
+            <!-- Category chips -->
+            <div style="display:flex;gap:4px;padding:6px 8px;background:#e8e8e8;border-bottom:1px solid #ccc;overflow:hidden;">
+              <div style="width:36px;height:14px;background:#333;border-radius:7px;flex-shrink:0;"></div>
+              <div style="width:42px;height:14px;background:#ccc;border-radius:7px;flex-shrink:0;"></div>
+              <div style="width:36px;height:14px;background:#ccc;border-radius:7px;flex-shrink:0;"></div>
+              <div style="width:40px;height:14px;background:#ccc;border-radius:7px;flex-shrink:0;"></div>
+              <div style="width:44px;height:14px;background:#ccc;border-radius:7px;flex-shrink:0;"></div>
+            </div>
+            <div class="wf-content" style="gap:7px;">
+              <div class="box h60 label-box" style="font-size:7px;flex-direction:column;gap:4px;padding:6px;">
+                <div class="row2"><div style="width:24px;height:24px;background:#888;border-radius:4px;flex-shrink:0;"></div><div style="flex:1;display:flex;flex-direction:column;gap:3px;"><div style="height:6px;background:#ccc;border-radius:2px;width:80%;"></div><div style="height:5px;background:#ddd;border-radius:2px;width:60%;"></div></div></div>
+                <div style="height:5px;background:#ddd;border-radius:2px;width:100%;"></div>
+                <div class="row2"><div style="height:5px;background:#ddd;border-radius:2px;flex:1;"></div><div style="height:5px;background:#ddd;border-radius:2px;flex:1;"></div></div>
+              </div>
+              <div class="box h60 label-box" style="font-size:7px;flex-direction:column;gap:4px;padding:6px;">
+                <div class="row2"><div style="width:24px;height:24px;background:#888;border-radius:4px;flex-shrink:0;"></div><div style="flex:1;display:flex;flex-direction:column;gap:3px;"><div style="height:6px;background:#ccc;border-radius:2px;width:80%;"></div><div style="height:5px;background:#ddd;border-radius:2px;width:60%;"></div></div></div>
+                <div style="height:5px;background:#ddd;border-radius:2px;width:100%;"></div>
+              </div>
+              <div class="box h60 label-box" style="font-size:7px;flex-direction:column;gap:4px;padding:6px;">
+                <div class="row2"><div style="width:24px;height:24px;background:#888;border-radius:4px;flex-shrink:0;"></div><div style="flex:1;display:flex;flex-direction:column;gap:3px;"><div style="height:6px;background:#ccc;border-radius:2px;width:80%;"></div><div style="height:5px;background:#ddd;border-radius:2px;width:60%;"></div></div></div>
+              </div>
+            </div>
+            <div class="wf-nav">
+              <div class="wf-nav-item"><div class="wf-nav-dot"></div><div class="wf-nav-lbl"></div></div>
+              <div class="wf-nav-item"><div class="wf-nav-dot"></div><div class="wf-nav-lbl"></div></div>
+              <div class="wf-nav-item"><div class="wf-nav-dot"></div><div class="wf-nav-lbl"></div></div>
+              <div class="wf-nav-item"><div class="wf-nav-dot"></div><div class="wf-nav-lbl"></div></div>
+              <div class="wf-nav-item"><div class="wf-nav-dot active"></div><div class="wf-nav-lbl"></div></div>
+            </div>
+          </div>
+          <div class="wf-phone-label">Places Hub</div>
+          <div class="annotation">
+            <strong>Elements:</strong> Search, category chips (All/Library/Labs/Canteen…), place cards with icon, status, capacity bar
+          </div>
+        </div>
+
+        <!-- Screen 7: Help -->
+        <div class="wf-phone">
+          <div class="wf-frame">
+            <div class="wf-status"><span style="width:20px;"></span><span style="width:30px;"></span></div>
+            <div class="wf-topbar"><div class="back-box"></div><div class="title-lines" style="flex:1;"><div class="tl long"></div><div class="tl short" style="margin-top:3px;"></div></div><div class="sun-box"></div></div>
+            <div class="wf-content" style="gap:7px;">
+              <div class="box h8 label-box" style="border:none;background:transparent;font-size:7px;">REPORT ISSUE</div>
+              <div class="box h20" style="background:#fff;"></div>
+              <div class="box h36" style="background:#fff;"></div>
+              <div class="box h20 dark label-box" style="color:#fff;font-size:7px;">SUBMIT BUTTON</div>
+              <div class="box h8 label-box" style="border:none;background:transparent;font-size:7px;">CONTACT</div>
+              <div class="box h80 label-box" style="font-size:7px;flex-direction:column;gap:6px;padding:6px;">
+                <div style="width:100%;height:12px;background:#ddd;border-radius:2px;"></div>
+                <div style="width:100%;height:1px;background:#ccc;"></div>
+                <div style="width:100%;height:12px;background:#ddd;border-radius:2px;"></div>
+                <div style="width:100%;height:1px;background:#ccc;"></div>
+                <div style="width:100%;height:12px;background:#ddd;border-radius:2px;"></div>
+              </div>
+              <div class="box h8 label-box" style="border:none;background:transparent;font-size:7px;">FAQ (accordion)</div>
+              <div class="box h48 label-box" style="font-size:7px;flex-direction:column;gap:5px;padding:6px;">
+                <div style="width:100%;height:7px;background:#ddd;border-radius:2px;"></div>
+                <div style="width:100%;height:7px;background:#ddd;border-radius:2px;"></div>
+                <div style="width:100%;height:7px;background:#ddd;border-radius:2px;"></div>
+              </div>
+            </div>
+            <div class="wf-nav">
+              <div class="wf-nav-item"><div class="wf-nav-dot"></div><div class="wf-nav-lbl"></div></div>
+              <div class="wf-nav-item"><div class="wf-nav-dot"></div><div class="wf-nav-lbl"></div></div>
+              <div class="wf-nav-item"><div class="wf-nav-dot"></div><div class="wf-nav-lbl"></div></div>
+              <div class="wf-nav-item"><div class="wf-nav-dot"></div><div class="wf-nav-lbl"></div></div>
+              <div class="wf-nav-item"><div class="wf-nav-dot"></div><div class="wf-nav-lbl"></div></div>
+            </div>
+          </div>
+          <div class="wf-phone-label">Help & Support</div>
+          <div class="annotation">
+            <strong>Elements:</strong> Issue type dropdown, description textarea, submit, contact rows, accordion FAQ
+          </div>
+        </div>
+
+      </div><!-- end wf-grid -->
+    </div><!-- end section -->
+
+    <!-- Design decisions -->
+    <div class="wf-section">
+      <div class="wf-title">Design Decisions — Wireframe Stage</div>
+      <div style="background:#fff;border:2px solid #333;border-radius:8px;padding:20px;box-shadow:3px 3px 0 #ccc;font-size:12px;line-height:1.8;max-width:700px;">
+        <p><strong>Navigation model:</strong> Persistent 5-tab bottom nav chosen over hamburger menu — students need zero-friction access to core features in a hurry.</p>
+        <p style="margin-top:8px;"><strong>Map first:</strong> Map is tab 2 (not 3+) because room-finding is the primary use case per our survey data.</p>
+        <p style="margin-top:8px;"><strong>Theme toggle:</strong> Placed top-right of every page header — consistent, never occludes content, reachable with one thumb.</p>
+        <p style="margin-top:8px;"><strong>Alert severity:</strong> Left border colour + section grouping chosen over icon-only to serve colour-blind users.</p>
+        <p style="margin-top:8px;"><strong>Places hub:</strong> Single page with filter chips preferred over separate pages to reduce navigation depth.</p>
+      </div>
+    </div>
+
+  </div><!-- end wf-body -->
+</div>
+<script src="theme.js"></script>
+</body>
+</html>
